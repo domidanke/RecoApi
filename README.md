@@ -1,5 +1,5 @@
 # RecoApi
-This Repository represents Reco-App's Firebase Cloud functions. It will serves as the app's Rest Api.
+This Repository represents Reco-App's Firebase Cloud functions. It serves as the app's Rest Api.
 
 ## Prerequisites
 
