@@ -2,7 +2,8 @@ class TeamMember {
     id: number;
     teamId: number;
     teamMemberTypeCode: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     gender: boolean;
     dob: Date;
     height: number;

@@ -2,8 +2,6 @@ class InjuryType {
     id: number;
     code: string;
     desc: string;
-    injuryDate: Date;
+    bodyPartCode: string;
     details: string;
-    icon: string;
-    color: string;
 }
