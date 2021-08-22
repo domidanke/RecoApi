@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "attach",
+            "name": "Attach",
+            "port": 9229,
+            "restart": true,
+            "debug.javascript.terminalOptions": {
+                "skipFiles": [
+                  "<node_internals>/**"
+                ]
+              },
+            "skipFiles": ["<node_internals>/**"],
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        }
+    ]
+}
