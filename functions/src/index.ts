@@ -11,43 +11,29 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send('Hello from Firebase!');
 });
 
-exports.user = functions.https.onRequest(app);
+exports.dataFillers = functions.https.onRequest(app);
 
-app.get('/', async (req, res) => {
-  const snapshot = await admin.firestore().collection('users').get();
-  const users: UserData[] = [];
-
-  snapshot.forEach((doc) => {
-    const userData = new UserData();
-    userData.id = doc.id;
-    userData.data = doc.data();
-    users.push(userData);
-  });
-  res.status(201).send(JSON.stringify(users));
+app.post('/injuryType', async (req, res) => {
+  await admin.firestore().collection('injuryTypes').add(req.body);
+  res.status(201).send('Added Injury Type');
 });
 
-app.get('/:id', async (req, res) => {
-  const snapshot = await admin.firestore().collection('users')
-      .doc(req.params.id).get();
-  const userData = new UserData();
-  userData.id = snapshot.id;
-  userData.data = snapshot.data();
-  res.status(201).send(JSON.stringify(userData));
+app.post('/bodyPart', async (req, res) => {
+  await admin.firestore().collection('bodyParts').add(req.body);
+  res.status(201).send('Added Body Part');
 });
 
-app.post('/', async (req, res) => {
-  const user = req.body;
-  await admin.firestore().collection('users').add(user);
-  res.status(201).send('Worked');
+app.post('/exerciseType', async (req, res) => {
+  await admin.firestore().collection('exerciseTypes').add(req.body);
+  res.status(201).send('Added Exercise Type');
 });
 
-class UserData {
-  id?: string;
-  data?: User;
-}
+app.post('/exercise', async (req, res) => {
+  await admin.firestore().collection('exercises').add(req.body);
+  res.status(201).send('Added Exercise');
+});
 
-class User {
-  email?: string;
-  userId?: number;
-  created?: Date;
-}
+app.post('/injuryStage', async (req, res) => {
+  await admin.firestore().collection('injuryStages').add(req.body);
+  res.status(201).send('Added Injury Stage');
+});
