@@ -1,4 +1,4 @@
-class InjuryStageExercise {
+export interface InjuryStageExercise {
     id: number;
     injuryStageId: number;
     exerciseId: number;

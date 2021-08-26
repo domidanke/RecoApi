@@ -1,6 +1,10 @@
-class Exercise {
+import { BodyPart } from "./body-part";
+
+export interface Exercise {
     id: number;
-    bodyPartCode: string;
+    code: string;
+    desc: string;
+    bodyPartCodes: BodyPart[];
     exerciseTypeCode: string;
     details: string;
 }

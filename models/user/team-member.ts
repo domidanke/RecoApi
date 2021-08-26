@@ -1,4 +1,4 @@
-class TeamMember {
+export interface TeamMember {
     id: number;
     teamId: number;
     teamMemberTypeCode: string;

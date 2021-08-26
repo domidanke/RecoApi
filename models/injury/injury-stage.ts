@@ -1,4 +1,4 @@
-class InjuryStage {
+export interface InjuryStage {
     id: number;
     injuryTypeCode: string;
     code: string;

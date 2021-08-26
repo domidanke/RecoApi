@@ -1,4 +1,4 @@
-class ExerciseType {
+export interface ExerciseType {
     id: number;
     code: string;
     desc: string;

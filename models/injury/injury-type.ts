@@ -1,4 +1,4 @@
-class InjuryType {
+export interface InjuryType {
     id: number;
     code: string;
     desc: string;

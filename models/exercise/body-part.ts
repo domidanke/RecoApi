@@ -1,4 +1,4 @@
-class BodyPart {
+export interface BodyPart {
     id: number;
     code: string;
     desc: string;

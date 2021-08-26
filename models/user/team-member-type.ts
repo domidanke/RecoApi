@@ -1,4 +1,4 @@
-class TeamMemberType {
+export interface TeamMemberType {
     id: number;
     code: string;
     desc: string;

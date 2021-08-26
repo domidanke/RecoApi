@@ -1,4 +1,4 @@
-class Injury {
+export interface Injury {
     id: number;
     teamMemberId: number;
     injuryTypeCode: string;
