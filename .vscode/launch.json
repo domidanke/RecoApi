@@ -7,20 +7,14 @@
         {
             "type": "pwa-node",
             "request": "attach",
-            "name": "Attach",
+            "skipFiles": [
+              "${workspaceFolder}/node_modules/**/*.js",
+              "!${workspaceFolder}/node_modules/math/**/*.js"
+            ],            
+            "name": "Debug",
             "port": 9229,
-            "restart": true,
-            "debug.javascript.terminalOptions": {
-                "skipFiles": [
-                  "<node_internals>/**"
-                ]
-              },
-            "skipFiles": ["<node_internals>/**"],
+            "restart": true,            
             "sourceMaps": true,
-            "resolveSourceMapLocations": [
-                "${workspaceFolder}/**",
-                "!**/node_modules/**"
-            ]
         }
     ]
 }

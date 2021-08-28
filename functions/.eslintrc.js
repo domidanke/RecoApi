@@ -30,5 +30,8 @@ module.exports = {
     'require-jsdoc': 0,
     'max-len': ['warn', {'code': 80}],
     'linebreak-style': ['warn', 'windows'],
+    'new-cap': 0,
+    'indent': ['error', 2],
+    '@typescript-eslint/no-var-requires': 0,
   },
 };
