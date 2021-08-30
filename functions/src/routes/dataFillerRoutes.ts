@@ -31,13 +31,9 @@ router.post('/injuryStage', async (req, res) => {
   res.status(201).send('Added Injury Stage');
 });
 
-router.post('/teamMember', async (req, res) => {
-  res.send('Wow, TeamMeber without Param is working! Scam');
-});
-
-router.post('/teamMember/:teamId', async (req, res) => {
+router.post('/team/:teamId/teamMember/:userId', async (req, res) => {
   await admin.firestore().collection('teams').doc(req.params.teamId)
-    .collection('teamMembers').add(req.body);
+    .collection('teamMembers').doc(req.params.userId).set(req.body);
   res.status(201).send('Added Team Member');
 });
 
