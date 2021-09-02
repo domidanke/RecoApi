@@ -26,8 +26,9 @@ router.post('/exercise', async (req, res) => {
   res.status(201).send('Added Exercise');
 });
 
-router.post('/injuryStage', async (req, res) => {
-  await admin.firestore().collection('injuryStages').add(req.body);
+router.post('/injuryType/:injuryTypeId/injuryStage', async (req, res) => {
+  await admin.firestore().collection('injuryTypes').doc(req.params.injuryTypeId)
+    .collection('injuryStages').add(req.body);
   res.status(201).send('Added Injury Stage');
 });
 
@@ -35,6 +36,12 @@ router.post('/team/:teamId/teamMember/:userId', async (req, res) => {
   await admin.firestore().collection('teams').doc(req.params.teamId)
     .collection('teamMembers').doc(req.params.userId).set(req.body);
   res.status(201).send('Added Team Member');
+});
+
+router.post('/team/:teamId/injury', async (req, res) => {
+  await admin.firestore().collection('teams').doc(req.params.teamId)
+    .collection('injuries').doc().set(req.body);
+  res.status(201).send('Added Injury');
 });
 
 module.exports = router;
