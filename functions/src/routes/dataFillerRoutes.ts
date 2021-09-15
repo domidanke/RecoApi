@@ -1,61 +1,84 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import { BodyPartPayload } from "../../../models/exercise/body-part";
-import { ExerciseTypePayload } from "../../../models/exercise/exercise-type";
-import { ExercisePayload } from "../../../models/exercise/exercise";
-import { InjuryPayload } from "../../../models/injury/injury";
-import { InjuryTypePayload } from "../../../models/injury/injury-type";
-import { InjuryStagePayload } from "../../../models/injury/injury-stage";
-import { TeamMemberPayload } from "../../../models/user/team-member";
-
+import { v4 as uuid } from 'uuid';
+import { BodyPart } from "../../../models/exercise/body-part";
+import { ExerciseType } from "../../../models/exercise/exercise-type";
+import { Exercise } from "../../../models/exercise/exercise";
+import { InjuryType } from "../../../models/injury/injury-type";
+import { InjuryStage } from "../../../models/injury/injury-stage";
+import { InjuryStageExercise } from "../../../models/exercise/injury-stage-exercise"
+import { ErrorService } from '../services/errorService';
 
 const router = express.Router();
 // The Firebase Admin SDK to access Firestore.
 admin.initializeApp();
 
-router.post('/injuryType', async (req, res) => {
-  const injuryType: InjuryTypePayload = req.body as InjuryTypePayload;
-  await admin.firestore().collection('injuryTypes').add(injuryType);
-  res.status(201).send('Added Injury Type');
+router.post('/bodyPart', async (req, res) => {
+  try {
+    const bodyPart = req.body as BodyPart;
+    bodyPart.id = uuid();
+    await admin.firestore().collection('bodyParts').doc(bodyPart.id).set(bodyPart);
+    res.status(201).send();
+  } catch (err) {
+    await ErrorService.logError(err, 'post/bodyPart', res)
+  }
 });
 
-router.post('/bodyPart', async (req, res) => {
-  const bodyPart: BodyPartPayload = req.body as BodyPartPayload;
-  await admin.firestore().collection('bodyParts').add(bodyPart);
-  res.status(201).send('Added Body Part');
+router.post('/injuryType', async (req, res) => {
+  try {
+    const injuryType = req.body as InjuryType;
+    injuryType.id = uuid();
+    await admin.firestore().collection('injuryTypes').doc(injuryType.id).set(injuryType);
+    res.status(201).send('Added Injury Type');
+  } catch (err) {
+      await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType', res);
+  }
 });
 
 router.post('/exerciseType', async (req, res) => {
-  const exerciseType: ExerciseTypePayload = req.body as ExerciseTypePayload;
-  await admin.firestore().collection('exerciseTypes').add(exerciseType);
-  res.status(201).send('Added Exercise Type');
+  try {
+    const exerciseType = req.body as ExerciseType;
+    exerciseType.id = uuid();
+    await admin.firestore().collection('exerciseTypes').doc(exerciseType.id).set(exerciseType);
+    res.status(201).send('Added Exercise Type');
+  } catch (err) {
+    await ErrorService.logError(err, 'dataFillerRoutes/post/exerciseType', res);
+  }
 });
 
 router.post('/exercise', async (req, res) => {
-  const exercise: ExercisePayload = req.body as ExercisePayload;
-  await admin.firestore().collection('exercises').add(exercise);
-  res.status(201).send('Added Exercise');
+  try {
+    const exercise = req.body as Exercise;
+    exercise.id = uuid();
+    await admin.firestore().collection('exercises').doc(exercise.id).set(exercise);
+    res.status(201).send('Added Exercise');
+  } catch (err) {
+    await ErrorService.logError(err, 'dataFillerRoutes/post/exercise', res);
+  }
+});
+
+router.post('/stageExercises', async (req, res) => {
+  try {
+    const injuryStageExercise = req.body as InjuryStageExercise;
+    injuryStageExercise.id = uuid();
+    await admin.firestore().collection('stageExercises').doc(injuryStageExercise.id)
+      .collection('injuryStages').doc(injuryStageExercise.id).set(injuryStageExercise);
+    res.status(201).send('Added Injury Stage Exercise');
+  } catch (err) {
+    await ErrorService.logError(err, 'dataFillerRoutes/post/stageExercises', res);
+  }
 });
 
 router.post('/injuryType/:injuryTypeId/injuryStage', async (req, res) => {
-  const injuryStage: InjuryStagePayload = req.body as InjuryStagePayload;
-  await admin.firestore().collection('injuryTypes').doc(req.params.injuryTypeId)
-    .collection('injuryStages').add(injuryStage);
-  res.status(201).send('Added Injury Stage');
-});
-
-router.post('/team/:teamId/teamMember/:userId', async (req, res) => {
-  const teamMember: TeamMemberPayload = req.body as TeamMemberPayload;
-  await admin.firestore().collection('teams').doc(req.params.teamId)
-    .collection('teamMembers').doc(req.params.userId).set(teamMember);
-  res.status(201).send('Added Team Member');
-});
-
-router.post('/team/:teamId/injury', async (req, res) => {
-  const injury: InjuryPayload = req.body as InjuryPayload;
-  await admin.firestore().collection('teams').doc(req.params.teamId)
-    .collection('injuries').doc().set(injury);
-  res.status(201).send('Added Injury');
+  try {
+    const injuryStage = req.body as InjuryStage;
+    injuryStage.id = uuid();
+    await admin.firestore().collection('injuryTypes').doc(req.params.injuryTypeId)
+      .collection('injuryStages').doc(injuryStage.id).set(injuryStage);
+    res.status(201).send('Added Injury Stage')
+  } catch (err) {
+    await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType/:injuryTypeId/injuryStage', res);
+  }
 });
 
 module.exports = router;

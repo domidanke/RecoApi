@@ -1,16 +1,9 @@
-export interface InjuryDto {
-    id: number;
+export interface Injury {
+    id: string;
+    teamId: string;
     teamMemberId: number;
     injuryTypeCode: string;
     injuryDate: Date;
     injuryStageCode: string;
     createdDate: Date;
-}
-
-export interface InjuryPayload {
-  teamMemberId: number;
-  injuryTypeCode: string;
-  injuryDate: Date;
-  injuryStageCode: string;
-  createdDate: Date;
 }

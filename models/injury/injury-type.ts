@@ -1,14 +1,7 @@
-export interface InjuryTypeDto {
-    id: number;
+export interface InjuryType {
+    id: string;
     code: string;
     desc: string;
     bodyPartCode: string;
     details: string;
-}
-
-export interface InjuryTypePayload {
-  code: string;
-  desc: string;
-  bodyPartCode: string;
-  details: string;
 }

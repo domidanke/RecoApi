@@ -1,0 +1,27 @@
+import * as express from 'express';
+import * as admin from 'firebase-admin';
+import { v4 as uuid } from 'uuid';
+import { CustomError } from "../../../models/error/customError";
+import { User } from "../../../models/user/user";
+
+const router = express.Router();
+// The Firebase Admin SDK to access Firestore.
+admin.initializeApp();
+
+router.post('/user', async (req, res) => {
+  try {
+    const user = req.body as User;
+    user.id = uuid();
+    await admin.firestore().collection('injuries').doc(user.id).set(user);
+    res.status(201).send();
+  } catch(err) {
+    if (err instanceof Error) {
+      const customError: CustomError = { id: uuid(), file: 'userRoutes.ts', function: 'post/user', message: err.message };
+      await admin.firestore().collection('errorLogs').doc(customError.id).set(customError);
+  } else {
+    res.status(500).send();
+  }
+  }
+});
+
+module.exports = router;

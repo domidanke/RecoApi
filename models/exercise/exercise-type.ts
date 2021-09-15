@@ -1,12 +1,5 @@
-export interface ExerciseTypeDto {
-    id: number;
-    code: string;
-    desc: string;
-    icon: string;
-    color: string;
-}
-
-export interface ExerciseTypePayload {
+export interface ExerciseType {
+    id: string;
     code: string;
     desc: string;
     icon: string;

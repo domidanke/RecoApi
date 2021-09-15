@@ -1,10 +1,5 @@
-export interface BodyPartDto {
-    id: number;
+export interface BodyPart {
+    id: string;
     code: string;
     desc: string;
-}
-
-export interface BodyPartPayload {
-  code: string;
-  desc: string;
 }

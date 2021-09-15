@@ -1,18 +1,10 @@
-import { BodyPartDto } from "./body-part";
+import { BodyPart } from "./body-part";
 
-export interface ExerciseDto {
-    id: number;
+export interface Exercise {
+    id: string;
     code: string;
     desc: string;
-    bodyPartCodes: BodyPartDto[];
+    bodyPartCodes: BodyPart[];
     exerciseTypeCode: string;
     details: string;
-}
-
-export interface ExercisePayload {
-  code: string;
-  desc: string;
-  bodyPartCodes: BodyPartDto[];
-  exerciseTypeCode: string;
-  details: string;
 }

@@ -1,24 +1,8 @@
-export interface TeamMemberDto {
-    id: number;
-    teamId: number;
+export interface TeamMember {
+    id: string;
+    teamId: string;
+    userId: string;
     teamMemberTypeCode: string;
-    firstName: string;
-    lastName: string;
-    gender: boolean;
-    dob: Date;
-    height: number;
-    weight: number;
-    createdDate: Date;
-}
-
-export interface TeamMemberPayload {
-  teamId: number;
-  teamMemberTypeCode: string;
-  firstName: string;
-  lastName: string;
-  gender: boolean;
-  dob: Date;
-  height: number;
-  weight: number;
-  createdDate: Date;
+    nickName: string;
+    joinedDate: Date;
 }
