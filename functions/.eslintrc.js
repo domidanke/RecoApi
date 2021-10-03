@@ -28,7 +28,7 @@ module.exports = {
     'quotes': ['error', 'single'],
     'import/no-unresolved': 0,
     'require-jsdoc': 0,
-    'max-len': ['warn', {'code': 80}],
+    'max-len': ['warn', {'code': 100}],
     'linebreak-style': ['warn', 'windows'],
     'new-cap': 0,
     'indent': ['error', 2],
