@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import { v4 as uuid } from 'uuid';
-import { Injury } from "../../../models/injury/injury";
-import { ErrorService } from '../services/errorService';
+import {v4 as uuid} from 'uuid';
+import {Injury} from '../../../models/injury/injury';
+import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
 // The Firebase Admin SDK to access Firestore.
@@ -14,7 +14,7 @@ router.post('/injury', async (req, res) => {
     injury.id = uuid();
     await admin.firestore().collection('injuries').doc(injury.id).set(injury);
     res.status(201).send();
-  } catch(err) {
+  } catch (err) {
     ErrorService.logError(err, 'injuryRoutes/post/injury', res);
   }
 });

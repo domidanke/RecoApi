@@ -1,13 +1,13 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import { v4 as uuid } from 'uuid';
-import { BodyPart } from "../../../models/exercise/body-part";
-import { ExerciseType } from "../../../models/exercise/exercise-type";
-import { Exercise } from "../../../models/exercise/exercise";
-import { InjuryType } from "../../../models/injury/injury-type";
-import { InjuryStage } from "../../../models/injury/injury-stage";
-import { InjuryStageExercise } from "../../../models/exercise/injury-stage-exercise"
-import { ErrorService } from '../services/errorService';
+import {v4 as uuid} from 'uuid';
+import {BodyPart} from '../../../models/exercise/body-part';
+import {ExerciseType} from '../../../models/exercise/exercise-type';
+import {Exercise} from '../../../models/exercise/exercise';
+import {InjuryType} from '../../../models/injury/injury-type';
+import {InjuryStage} from '../../../models/injury/injury-stage';
+import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercise';
+import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
 // The Firebase Admin SDK to access Firestore.
@@ -20,7 +20,7 @@ router.post('/bodyPart', async (req, res) => {
     await admin.firestore().collection('bodyParts').doc(bodyPart.id).set(bodyPart);
     res.status(201).send();
   } catch (err) {
-    await ErrorService.logError(err, 'post/bodyPart', res)
+    await ErrorService.logError(err, 'post/bodyPart', res);
   }
 });
 
@@ -31,7 +31,7 @@ router.post('/injuryType', async (req, res) => {
     await admin.firestore().collection('injuryTypes').doc(injuryType.id).set(injuryType);
     res.status(201).send('Added Injury Type');
   } catch (err) {
-      await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType', res);
+    await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType', res);
   }
 });
 
@@ -75,7 +75,7 @@ router.post('/injuryType/:injuryTypeId/injuryStage', async (req, res) => {
     injuryStage.id = uuid();
     await admin.firestore().collection('injuryTypes').doc(req.params.injuryTypeId)
       .collection('injuryStages').doc(injuryStage.id).set(injuryStage);
-    res.status(201).send('Added Injury Stage')
+    res.status(201).send('Added Injury Stage');
   } catch (err) {
     await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType/:injuryTypeId/injuryStage', res);
   }

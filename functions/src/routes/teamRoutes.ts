@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import { v4 as uuid } from 'uuid';
-import { TeamMember } from "../../../models/user/team-member";
-import { ErrorService } from '../services/errorService';
+import {v4 as uuid} from 'uuid';
+import {TeamMember} from '../../../models/user/team-member';
+import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
 // The Firebase Admin SDK to access Firestore.
