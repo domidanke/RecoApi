@@ -5,10 +5,8 @@ import {TeamMember} from '../../../models/user/team-member';
 import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
-// The Firebase Admin SDK to access Firestore.
-admin.initializeApp();
 
-router.post('/team/teamMember/', async (req, res) => {
+router.post('/teamMember', async (req, res) => {
   try {
     const teamMember = req.body as TeamMember;
     teamMember.id = uuid();

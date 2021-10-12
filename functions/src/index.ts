@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin';
 const dataFillerRoutes = require('./routes/dataFillerRoutes');
 const teamRoutes = require('./routes/teamRoutes');
 const injuryRoutes = require('./routes/injuryRoutes');
@@ -5,6 +6,8 @@ import * as functions from 'firebase-functions';
 import * as express from 'express';
 
 const app = express();
+// The Firebase Admin SDK to access Firestore.
+admin.initializeApp();
 
 app.use('/dataFillers', dataFillerRoutes);
 app.use('/team', teamRoutes);

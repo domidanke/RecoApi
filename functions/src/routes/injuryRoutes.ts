@@ -5,10 +5,8 @@ import {Injury} from '../../../models/injury/injury';
 import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
-// The Firebase Admin SDK to access Firestore.
-admin.initializeApp();
 
-router.post('/injury', async (req, res) => {
+router.post('', async (req, res) => {
   try {
     const injury = req.body as Injury;
     injury.id = uuid();

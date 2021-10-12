@@ -10,17 +10,16 @@ import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercis
 import {ErrorService} from '../services/errorService';
 
 const router = express.Router();
-// The Firebase Admin SDK to access Firestore.
-admin.initializeApp();
 
 router.post('/bodyPart', async (req, res) => {
   try {
-    const bodyPart = req.body as BodyPart;
+    var bodyPart = JSON.parse(req.body) as BodyPart;
     bodyPart.id = uuid();
     await admin.firestore().collection('bodyParts').doc(bodyPart.id).set(bodyPart);
-    res.status(201).send();
+    res.status(202).send();
   } catch (err) {
-    await ErrorService.logError(err, 'post/bodyPart', res);
+    await ErrorService.logError(err, 'dataFillerRoutes/post/bodyPart', res);
+    res.status(500).send();
   }
 });
 
