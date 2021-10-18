@@ -8,12 +8,14 @@ import {InjuryType} from '../../../models/injury/injury-type';
 import {InjuryStage} from '../../../models/injury/injury-stage';
 import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercise';
 import {ErrorService} from '../services/errorService';
+import validateObjectMw from '../middleware/validators';
+const bodyPartSchema = require('../../../models/exercise/body-part');
 
 const router = express.Router();
 
-router.post('/bodyPart', async (req, res) => {
+router.post('/bodyPart', validateObjectMw(bodyPartSchema), async (req, res) => {
   try {
-    var bodyPart = JSON.parse(req.body) as BodyPart;
+    const bodyPart: BodyPart = req.body;
     bodyPart.id = uuid();
     await admin.firestore().collection('bodyParts').doc(bodyPart.id).set(bodyPart);
     res.status(202).send();
@@ -30,7 +32,7 @@ router.post('/injuryType', async (req, res) => {
     await admin.firestore().collection('injuryTypes').doc(injuryType.id).set(injuryType);
     res.status(201).send('Added Injury Type');
   } catch (err) {
-    await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType', res);
+    await ErrorService.logError(err, 'fillerRoutes/post/injuryType', res);
   }
 });
 
@@ -41,7 +43,7 @@ router.post('/exerciseType', async (req, res) => {
     await admin.firestore().collection('exerciseTypes').doc(exerciseType.id).set(exerciseType);
     res.status(201).send('Added Exercise Type');
   } catch (err) {
-    await ErrorService.logError(err, 'dataFillerRoutes/post/exerciseType', res);
+    await ErrorService.logError(err, 'fillerRoutes/post/exerciseType', res);
   }
 });
 
@@ -52,7 +54,7 @@ router.post('/exercise', async (req, res) => {
     await admin.firestore().collection('exercises').doc(exercise.id).set(exercise);
     res.status(201).send('Added Exercise');
   } catch (err) {
-    await ErrorService.logError(err, 'dataFillerRoutes/post/exercise', res);
+    await ErrorService.logError(err, 'fillerRoutes/post/exercise', res);
   }
 });
 
@@ -64,7 +66,7 @@ router.post('/stageExercises', async (req, res) => {
       .collection('injuryStages').doc(injuryStageExercise.id).set(injuryStageExercise);
     res.status(201).send('Added Injury Stage Exercise');
   } catch (err) {
-    await ErrorService.logError(err, 'dataFillerRoutes/post/stageExercises', res);
+    await ErrorService.logError(err, 'fillerRoutes/post/stageExercises', res);
   }
 });
 
@@ -76,7 +78,7 @@ router.post('/injuryType/:injuryTypeId/injuryStage', async (req, res) => {
       .collection('injuryStages').doc(injuryStage.id).set(injuryStage);
     res.status(201).send('Added Injury Stage');
   } catch (err) {
-    await ErrorService.logError(err, 'dataFillerRoutes/post/injuryType/:injuryTypeId/injuryStage', res);
+    await ErrorService.logError(err, 'fillerRoutes/post/injuryType/:injuryTypeId/injuryStage', res);
   }
 });
 
