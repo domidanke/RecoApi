@@ -1,4 +1,4 @@
-import {AnySchema, ValidationError} from '../../node_modules/yup';
+import {AnySchema, ValidationError} from 'yup';
 // Validate that a resource being POSTed or PUT
 // has a valid shape, else return 400 Bad Request
 
