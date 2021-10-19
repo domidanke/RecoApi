@@ -6,8 +6,9 @@ import {User} from '../../../models/user/user';
 const router = express.Router();
 
 router.post('/user', async (req, res) => {
-  const user = req.body as User;
+  const user: User = req.body;
   user.id = uuid();
+  user.createdDate = new Date();
   await admin.firestore().collection('injuries').doc(user.id).set(user);
   res.status(201).send();
 });

@@ -1,7 +1,7 @@
 import { object, SchemaOf, string } from '../../functions/node_modules/yup';
 
 export interface BodyPart {
-  id: string | undefined;
+  id?: string;
   code: string;
   desc: string;
 }
