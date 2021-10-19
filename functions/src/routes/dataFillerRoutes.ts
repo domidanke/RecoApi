@@ -7,7 +7,7 @@ import {Exercise} from '../../../models/exercise/exercise';
 import {InjuryType} from '../../../models/injury/injury-type';
 import {InjuryStage} from '../../../models/injury/injury-stage';
 import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercise';
-import validateObjectMw from '../middleware/RequestValidator';
+import validateObjectMw from '../middleware/requestValidator';
 const bodyPartSchema = require('../../../models/exercise/body-part');
 
 const router = express.Router();
