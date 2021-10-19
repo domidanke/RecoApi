@@ -4,6 +4,7 @@ const teamRoutes = require('./routes/teamRoutes');
 const injuryRoutes = require('./routes/injuryRoutes');
 import * as functions from 'firebase-functions';
 import * as express from 'express';
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 // The Firebase Admin SDK to access Firestore.
@@ -12,6 +13,8 @@ admin.initializeApp();
 app.use('/dataFillers', dataFillerRoutes);
 app.use('/team', teamRoutes);
 app.use('/injury', injuryRoutes);
+
+app.use(errorHandler);
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info('Hello logs!', {structuredData: true});
