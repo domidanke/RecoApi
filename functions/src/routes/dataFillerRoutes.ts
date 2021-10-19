@@ -1,14 +1,13 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {v4 as uuid} from 'uuid';
-import {BodyPart} from '../../../models/exercise/body-part';
-import {ExerciseType} from '../../../models/exercise/exercise-type';
+import bodyPartSchema, {BodyPart} from '../../../models/exercise/body-part';
+import exerciseTypeSchema, {ExerciseType} from '../../../models/exercise/exercise-type';
 import {Exercise} from '../../../models/exercise/exercise';
-import {InjuryType} from '../../../models/injury/injury-type';
+import injuryTypeSchema, {InjuryType} from '../../../models/injury/injury-type';
 import {InjuryStage} from '../../../models/injury/injury-stage';
 import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercise';
 import validateObjectMw from '../middleware/requestValidator';
-const bodyPartSchema = require('../../../models/exercise/body-part');
 
 const router = express.Router();
 
@@ -19,15 +18,15 @@ router.post('/bodyPart', validateObjectMw(bodyPartSchema), async (req, res) => {
   res.status(201).send();
 });
 
-router.post('/injuryType', async (req, res) => {
-  const injuryType = req.body as InjuryType;
+router.post('/injuryType', validateObjectMw(injuryTypeSchema), async (req, res) => {
+  const injuryType: InjuryType = req.body;
   injuryType.id = uuid();
   await admin.firestore().collection('injuryTypes').doc(injuryType.id).set(injuryType);
   res.status(201).send('Added Injury Type');
 });
 
-router.post('/exerciseType', async (req, res) => {
-  const exerciseType = req.body as ExerciseType;
+router.post('/exerciseType', validateObjectMw(exerciseTypeSchema), async (req, res) => {
+  const exerciseType: ExerciseType = req.body;
   exerciseType.id = uuid();
   await admin.firestore().collection('exerciseTypes').doc(exerciseType.id).set(exerciseType);
   res.status(201).send('Added Exercise Type');
