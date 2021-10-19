@@ -16,6 +16,9 @@ Flutter Sdk
 
 If ```firebase deploy --only functions``` fails, try ```Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass```
 
-To Debug and emulate, run ```npm install -g @google-cloud/functions-emulator``` 
-Then, run ```firebase emulators:start --inspect-functions``` to emulate firestore and cloud functions locally.
+After installing using ```npm install -g @google-cloud/functions-emulator```,
+build the project using ```npm run build```,
+and finally run ```firebase emulators:start --inspect-functions``` to emulate firestore and cloud functions locally.
 In your IDE, run 'Attach' on the Node Application.
+
+This repo uses eslint.
