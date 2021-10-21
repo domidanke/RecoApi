@@ -1,7 +1,7 @@
 export interface TeamMemberType {
-    id: number;
-    code: string;
-    desc: string;
-    icon: string;
-    color: string;
+  id: number;
+  code: string;
+  desc: string;
+  icon: string;
+  color: string;
 }

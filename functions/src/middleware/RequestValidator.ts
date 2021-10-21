@@ -5,8 +5,12 @@ import {AnySchema, ValidationError} from 'yup';
 import {Request, Response, NextFunction} from 'express';
 
 // @param {*} resourceSchema is a yup schema
-const validateResourceMw = (resourceSchema: AnySchema) =>
-  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const validateResourceMw = (resourceSchema: AnySchema) => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const resource = req.body;
     try {
       // throws an error if not valid
@@ -21,5 +25,6 @@ const validateResourceMw = (resourceSchema: AnySchema) =>
       }
     }
   };
+};
 
 export default validateResourceMw;

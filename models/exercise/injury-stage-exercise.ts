@@ -1,6 +1,6 @@
 export interface InjuryStageExercise {
-    id: string;
-    injuryStageId: number;
-    exerciseId: number;
-    details: string;
+  id: string;
+  injuryStageId: number;
+  exerciseId: number;
+  details: string;
 }

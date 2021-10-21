@@ -1,8 +1,8 @@
-import { TeamMemberDto } from "./team-member";
+import {TeamMember} from './team-member';
 
 export interface Team {
-    id: number;
-    name: string;
-    createdDate: Date;
-    teamMembers: TeamMemberDto[];
+  id: number;
+  name: string;
+  createdDate: Date;
+  teamMembers: TeamMember[];
 }

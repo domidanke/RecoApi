@@ -8,8 +8,13 @@ const router = express.Router();
 router.post('/teamMember', async (req, res) => {
   const teamMember = req.body as TeamMember;
   teamMember.id = uuid();
-  await admin.firestore().collection('teams').doc(teamMember.teamId)
-    .collection('teamMembers').doc(teamMember.id).set(teamMember);
+  await admin
+    .firestore()
+    .collection('teams')
+    .doc(teamMember.teamId)
+    .collection('teamMembers')
+    .doc(teamMember.id)
+    .set(teamMember);
   res.status(201).send();
 });
 

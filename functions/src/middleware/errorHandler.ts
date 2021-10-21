@@ -10,24 +10,31 @@ export interface CustomError {
   occurred: Date;
 }
 
-const errorHandler =
-  async function(err: Error, req: Request, res: Response, next: NextFunction): Promise<void> {
-    if (err instanceof Error) {
-      const customError: CustomError =
-      {
-        id: uuid(),
-        name: err.name,
-        httpHeaders: req.rawHeaders.join('; '),
-        message: err.message,
-        occurred: new Date(),
-      };
-      await admin.firestore().collection('errorLogs').doc(customError.id).set(customError);
-      res.status(400).send();
-      next();
-    } else {
-      res.status(400).send();
-      next();
-    }
-  };
+const errorHandler = async function (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  if (err instanceof Error) {
+    const customError: CustomError = {
+      id: uuid(),
+      name: err.name,
+      httpHeaders: req.rawHeaders.join('; '),
+      message: err.message,
+      occurred: new Date(),
+    };
+    await admin
+      .firestore()
+      .collection('errorLogs')
+      .doc(customError.id)
+      .set(customError);
+    res.status(400).send();
+    next();
+  } else {
+    res.status(400).send();
+    next();
+  }
+};
 
 export default errorHandler;
