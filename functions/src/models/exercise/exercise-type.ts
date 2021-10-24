@@ -1,4 +1,4 @@
-import {object, SchemaOf, string} from '../../functions/node_modules/yup';
+import {object, SchemaOf, string} from 'yup';
 
 export interface ExerciseType {
   id?: string;

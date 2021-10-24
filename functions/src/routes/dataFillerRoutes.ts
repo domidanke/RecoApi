@@ -1,21 +1,21 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {v4 as uuid} from 'uuid';
-import bodyPartSchema, {BodyPart} from '../../../models/exercise/body-part';
+import bodyPartSchema, {BodyPart} from '../models/exercise/body-part';
 import exerciseTypeSchema, {
   ExerciseType,
-} from '../../../models/exercise/exercise-type';
-import {Exercise} from '../../../models/exercise/exercise';
-import injuryTypeSchema, {InjuryType} from '../../../models/injury/injury-type';
-import {InjuryStage} from '../../../models/injury/injury-stage';
-import {InjuryStageExercise} from '../../../models/exercise/injury-stage-exercise';
+} from '../models/exercise/exercise-type';
+import {Exercise} from '../models/exercise/exercise';
+import injuryTypeSchema, {InjuryType} from '../models/injury/injury-type';
+import {InjuryStage} from '../models/injury/injury-stage';
+import {InjuryStageExercise} from '../models/exercise/injury-stage-exercise';
 import validateObjectMw from '../middleware/requestValidator';
 
 const router = express.Router();
 
 router.post('/bodyPart', validateObjectMw(bodyPartSchema), async (req, res) => {
   const bodyPart: BodyPart = req.body;
-  bodyPart.id = uuid();
+  bodyPart.id = uuid() as string;
   await admin
     .firestore()
     .collection('bodyParts')
@@ -29,7 +29,7 @@ router.post(
   validateObjectMw(injuryTypeSchema),
   async (req, res) => {
     const injuryType: InjuryType = req.body;
-    injuryType.id = uuid();
+    injuryType.id = uuid() as string;
     await admin
       .firestore()
       .collection('injuryTypes')

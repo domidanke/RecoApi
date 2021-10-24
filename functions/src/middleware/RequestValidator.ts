@@ -14,12 +14,12 @@ const validateResourceMw = (resourceSchema: AnySchema) => {
     const resource = req.body;
     try {
       // throws an error if not valid
-      await resourceSchema.validate(resource);
+      await resourceSchema.validate(resource, {abortEarly: false});
       next();
     } catch (err) {
       if (err instanceof ValidationError) {
         console.error(err);
-        res.status(400).json({errors: err.errors.join('; ')});
+        res.status(400).json({validation_errors: err.errors.join('; ')});
       } else {
         res.status(500).send();
       }

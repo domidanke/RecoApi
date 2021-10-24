@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {v4 as uuid} from 'uuid';
-import {User} from '../../../models/user/user';
+import {User} from '../models/user/user';
 
 const router = express.Router();
 

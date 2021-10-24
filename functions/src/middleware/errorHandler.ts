@@ -37,4 +37,4 @@ const errorHandler = async function (
   }
 };
 
-export default errorHandler;
+module.exports = errorHandler;
