@@ -1,5 +1,4 @@
 export interface User {
-  authId: string;
   id: string;
   userName: string;
   email: string;
@@ -10,5 +9,11 @@ export interface User {
   dob: Date;
   height: number;
   weight: number;
+  createdDate: Date;
+}
+
+export interface NewUser {
+  id: string;
+  email?: string;
   createdDate: Date;
 }

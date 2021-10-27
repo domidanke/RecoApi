@@ -8,6 +8,8 @@ const validateFirebaseIdToken = require('./middleware/firebaseUserAuthenticator'
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors')({origin: true});
 
+const onCreateFirebaseUser = require('./triggers/firebase-user-created-trigger');
+
 const app = express();
 // The Firebase Admin SDK to access Firestore.
 admin.initializeApp();
@@ -24,3 +26,5 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 });
 
 exports.helpers = functions.https.onRequest(app);
+
+exports.onCreateFirebaseUser = onCreateFirebaseUser;
