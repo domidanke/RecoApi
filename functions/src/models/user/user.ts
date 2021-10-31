@@ -14,14 +14,21 @@ export interface User {
 
 export interface NewUserRegistration {
   id: string;
-  recentTeamId: string;
-  teamIds: string[];
   firstName: string;
   lastName: string;
   gender: boolean;
   dob: Date;
   height: number;
   weight: number;
+}
+
+export interface RegistrationRequest {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  teamId: string;
+  teamName: string;
 }
 
 export interface OnCreateUser {
