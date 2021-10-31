@@ -1,8 +1,12 @@
 export interface TeamMember {
-  id: string;
-  teamId: string;
   userId: string;
+  teamId: string;
   teamMemberTypeCode: string;
   nickName: string;
   joinedDate: Date;
+}
+
+export interface JoinTeamRequest {
+  userId: string;
+  teamId: string;
 }
