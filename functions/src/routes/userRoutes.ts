@@ -24,6 +24,7 @@ router.post('/:userId/registration-requests/:teamId', async (req, res) => {
     .get()
     .then(async (teamSnap: DocumentSnapshot) => {
       if (!teamSnap.exists) throw new Error('Team does not exist');
+      const team = teamSnap.data() as Team;
       await admin
         .firestore()
         .collection('user')
@@ -34,10 +35,10 @@ router.post('/:userId/registration-requests/:teamId', async (req, res) => {
           const user = userSnap.data() as User;
           const joinTeamRequest: JoinTeamRequest = {
             id: uuid(),
-            userId: req.params.userId,
+            userId: user.id,
             username: user.firstName + ' ' + user.lastName,
-            teamId: req.params.teamId,
-            teamName: (teamSnap.data() as Team).name,
+            teamId: team.id,
+            teamName: team.name,
             createdDate: new Date(),
           };
           await admin
