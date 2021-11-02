@@ -9,7 +9,7 @@ import {Exercise} from '../models/exercise/exercise';
 import injuryTypeSchema, {InjuryType} from '../models/injury/injury-type';
 import {InjuryStage} from '../models/injury/injury-stage';
 import {InjuryStageExercise} from '../models/exercise/injury-stage-exercise';
-import validateObjectMw from '../middleware/requestValidator';
+import validateObjectMw from '../middleware/request-validator';
 
 const router = express.Router();
 

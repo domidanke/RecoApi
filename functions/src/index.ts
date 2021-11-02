@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 const dataFillerRoutes = require('./routes/dataFillerRoutes');
 const teamRoutes = require('./routes/teamRoutes');
 const injuryRoutes = require('./routes/injuryRoutes');
+const userRoutes = require('./routes/userRoutes');
 import * as functions from 'firebase-functions';
 import * as express from 'express';
 const validateFirebaseIdToken = require('./middleware/firebaseUserAuthenticator');
@@ -20,6 +21,7 @@ app.use(errorHandler);
 app.use('/dataFillers', dataFillerRoutes);
 app.use('/team', teamRoutes);
 app.use('/injury', injuryRoutes);
+app.use('/user', userRoutes);
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info('Hello logs!', {structuredData: true});
