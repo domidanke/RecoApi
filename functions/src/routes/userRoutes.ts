@@ -35,8 +35,8 @@ router.post('/:userId/registration-requests/:teamId', async (req, res) => {
           const user = userSnap.data() as User;
           const joinTeamRequest: JoinTeamRequest = {
             id: uuid(),
-            userId: user.id,
-            username: user.firstName + ' ' + user.lastName,
+            requesterId: user.id,
+            requesterName: user.firstName + ' ' + user.lastName,
             teamId: team.id,
             teamName: team.name,
             createdDate: new Date(),

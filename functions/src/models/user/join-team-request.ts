@@ -1,7 +1,7 @@
 export interface JoinTeamRequest {
   id: string;
-  userId: string;
-  username: string;
+  requesterId: string;
+  requesterName: string;
   teamId: string;
   teamName: string;
   createdDate: Date;
