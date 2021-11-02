@@ -1,21 +1,22 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import {v4 as uuid} from 'uuid';
-import {TeamMember} from '../models/user/team-member';
+import {JoinTeamRequest} from '../models/user/join-team-request';
 
 const router = express.Router();
 
-router.post('/teamMember', async (req, res) => {
-  const teamMember = req.body as TeamMember;
-  teamMember.id = uuid();
+router.get(':teamId/registration-requests', async (req, res) => {
   await admin
     .firestore()
-    .collection('teams')
-    .doc(teamMember.teamId)
-    .collection('teamMembers')
-    .doc(teamMember.id)
-    .set(teamMember);
-  res.status(201).send();
+    .collection('joinTeamRequests')
+    .where('teamId', '==', req.params.teamId)
+    .get()
+    .then((snaps) => {
+      const jtrList: JoinTeamRequest[] = [];
+      for (const doc of snaps.docs) {
+        jtrList.push(doc.data() as JoinTeamRequest);
+      }
+      res.status(200).send(JSON.stringify(jtrList));
+    });
 });
 
 module.exports = router;
