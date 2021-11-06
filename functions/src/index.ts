@@ -5,7 +5,7 @@ const injuryRoutes = require('./routes/injuryRoutes');
 const userRoutes = require('./routes/userRoutes');
 import * as functions from 'firebase-functions';
 import * as express from 'express';
-const validateFirebaseIdToken = require('./middleware/firebaseUserAuthenticator');
+const validateFirebaseIdToken = require('./middleware/firebase-user-authenticator');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors')({origin: true});
 
