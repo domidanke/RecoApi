@@ -7,6 +7,10 @@ import jtrDecisionSchema, {
 } from '../models/team-request/join-team-request decision';
 import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
 import {TeamMember} from '../models/user/team-member';
+import newTeamRegistrationSchema, {
+  NewTeamRegistration,
+} from '../models/user/team';
+import {v4 as uuid} from 'uuid';
 
 const router = express.Router();
 
@@ -62,4 +66,19 @@ router.post(
   }
 );
 
-module.exports = router;
+router.post(
+  '/create-team',
+  validateObjectMw(newTeamRegistrationSchema),
+  async (req, res) => {
+    const team: NewTeamRegistration = req.body;
+    team.id = uuid();
+    await admin
+      .firestore()
+      .collection('teams')
+      .doc(team.id)
+      .set(team)
+      .then(() => {
+        res.status(201).send('Successfully created new Team');
+      });
+  }
+);

@@ -3,9 +3,13 @@ import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {v4 as uuid} from 'uuid';
 import {Team} from '../models/user/team';
-import {User} from '../models/user/user';
 import validateIsCurrentUser from '../middleware/current-user-validator';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
+import validateObjectMw from '../middleware/request-validator';
+import newUserRegistrationSchema, {
+  NewUserRegistration,
+  User,
+} from '../models/user/user';
 
 const router = express.Router();
 
@@ -74,5 +78,22 @@ router.get('/:userId', async (req, res) => {
       res.status(200).send(JSON.stringify(user));
     });
 });
+
+router.post(
+  '/create-user',
+  validateObjectMw(newUserRegistrationSchema),
+  async (req, res) => {
+    const user: NewUserRegistration = req.body;
+    user.id = uuid();
+    await admin
+      .firestore()
+      .collection('users')
+      .doc(user.id)
+      .set(user)
+      .then(() => {
+        res.status(201).send('New User Successfully registered');
+      });
+  }
+);
 
 module.exports = router;

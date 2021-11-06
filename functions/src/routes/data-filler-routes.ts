@@ -10,6 +10,7 @@ import injuryTypeSchema, {InjuryType} from '../models/injury/injury-type';
 import {InjuryStage} from '../models/injury/injury-stage';
 import {InjuryStageExercise} from '../models/exercise/injury-stage-exercise';
 import validateObjectMw from '../middleware/request-validator';
+import sportCodeSchema, {SportCode} from '../models/sportcode/sport-code';
 
 const router = express.Router();
 
@@ -90,5 +91,22 @@ router.post('/injuryType/:injuryTypeId/injuryStage', async (req, res) => {
     .set(injuryStage);
   res.status(201).send('Added Injury Stage');
 });
+
+router.post(
+  '/sportCode',
+  validateObjectMw(sportCodeSchema),
+  async (req, res) => {
+    const sportCode: SportCode = req.body;
+    sportCode.id = uuid();
+    await admin
+      .firestore()
+      .collection('sportCode')
+      .doc(sportCode.id)
+      .set(sportCode)
+      .then(() => {
+        res.status(201).send('Successfully added new SportCode');
+      });
+  }
+);
 
 module.exports = router;

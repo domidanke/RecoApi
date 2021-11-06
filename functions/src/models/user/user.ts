@@ -1,3 +1,5 @@
+import {number, object, SchemaOf, date, string, bool} from 'yup';
+
 export interface User {
   id: string;
   email: string;
@@ -13,7 +15,7 @@ export interface User {
 }
 
 export interface NewUserRegistration {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
   gender: boolean;
@@ -36,3 +38,15 @@ export interface OnCreateUser {
   email?: string;
   createdDate: Date;
 }
+
+const newUserRegistrationSchema: SchemaOf<NewUserRegistration> = object({
+  id: string(),
+  firstName: string().required('Firstname is missing'),
+  lastName: string().required('Lastname is missing'),
+  gender: bool().required('Gender is missing'),
+  dob: date().required('Date is missing'),
+  height: number().required('Height is missing').min(0),
+  weight: number().required('Weight is missing').min(0),
+});
+
+export default newUserRegistrationSchema;
