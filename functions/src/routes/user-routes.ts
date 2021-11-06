@@ -63,4 +63,16 @@ router.get('/registration-requests', async (req, res) => {
     });
 });
 
+router.get('/:userId', async (req, res) => {
+  await admin
+    .firestore()
+    .collection('users')
+    .where('userId', '==', req.params.userId)
+    .get()
+    .then((snaps) => {
+      const user = snaps.docs[0];
+      res.status(200).send(JSON.stringify(user));
+    });
+});
+
 module.exports = router;

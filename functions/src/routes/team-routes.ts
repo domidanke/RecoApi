@@ -6,7 +6,6 @@ import jtrDecisionSchema, {
   JoinTeamRequestDecision,
 } from '../models/team-request/join-team-request decision';
 import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
-import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {TeamMember} from '../models/user/team-member';
 
 const router = express.Router();
@@ -40,7 +39,7 @@ router.post(
       const newTeamMember: TeamMember = {
         userId: payload.requesterId,
         active: true,
-        teamMemberTypeCode: payload.memberTypeCode ?? 'PLAY',
+        teamMemberTypeCode: payload.teamMemberTypeCode ?? 'PLAY',
         joinedDate: new Date(),
       };
       await admin
