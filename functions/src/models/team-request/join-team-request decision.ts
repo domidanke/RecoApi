@@ -4,14 +4,14 @@ export interface JoinTeamRequestDecision {
   id: string;
   requesterId: string;
   accepted: boolean;
-  memberTypeCode?: string;
+  teamMemberTypeCode?: string;
 }
 
 const jtrDecisionSchema: SchemaOf<JoinTeamRequestDecision> = object({
   id: string().required('Join-Request Id is missing'),
   requesterId: string().required('Requester Id is missing'),
   accepted: bool().required('Decision is missing'),
-  memberTypeCode: string(),
+  teamMemberTypeCode: string(),
 });
 
 export default jtrDecisionSchema;
