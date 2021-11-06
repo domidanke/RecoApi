@@ -17,8 +17,9 @@ const validateFirebaseIdToken = async (
       await admin
         .auth()
         .verifyIdToken(req.headers.authorization.split('Bearer ')[1])
-        .then((decodedToken: unknown) => {
+        .then((decodedToken: any) => {
           functions.logger.log('ID Token correctly decoded', decodedToken);
+          req.currentUserId = decodedToken.uid as string;
           next();
         });
     } catch (error) {
