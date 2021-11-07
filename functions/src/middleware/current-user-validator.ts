@@ -6,7 +6,10 @@ const validateIsCurrentUser = () => {
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    if (req.body.userId == req.currentUserId) {
+    if (
+      req.body.userId == req.currentUserId ||
+      req.params.userId == req.currentUserId
+    ) {
       next();
     } else {
       res.status(403).send('You are not authorized for this action');

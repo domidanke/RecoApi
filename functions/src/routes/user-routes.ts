@@ -67,7 +67,7 @@ router.get('/registration-requests', async (req, res) => {
     });
 });
 
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', validateIsCurrentUser(), async (req, res) => {
   await admin
     .firestore()
     .collection('users')
