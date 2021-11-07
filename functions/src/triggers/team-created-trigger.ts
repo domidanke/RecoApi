@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin';
 import {QueryDocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {Team} from '../models/user/team';
 
+admin.initializeApp();
 const db = admin.firestore();
 // TODO write TEST
 const onCreateTeam = functions.firestore
