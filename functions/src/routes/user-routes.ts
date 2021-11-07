@@ -71,10 +71,10 @@ router.get('/:userId', async (req, res) => {
   await admin
     .firestore()
     .collection('users')
-    .where('userId', '==', req.params.userId)
+    .doc(req.params.userId)
     .get()
-    .then((snaps) => {
-      const user = snaps.docs[0];
+    .then((snap: DocumentSnapshot) => {
+      const user = snap.data() as User;
       res.status(200).send(JSON.stringify(user));
     });
 });
