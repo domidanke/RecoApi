@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import {DecodedToken} from '../models/other/decoded-token';
 
 const validateFirebaseIdToken = async (
   req: Request,
@@ -18,8 +19,9 @@ const validateFirebaseIdToken = async (
         .auth()
         .verifyIdToken(req.headers.authorization.split('Bearer ')[1])
         .then((decodedToken) => {
-          functions.logger.log('ID Token correctly decoded', decodedToken);
-          req.currentUserId = decodedToken.uid as string;
+          const token = decodedToken as DecodedToken;
+          functions.logger.log('ID Token correctly decoded', token);
+          req.currentUserId = token.uid;
           next();
         });
     } catch (error) {
