@@ -59,7 +59,10 @@ router.post(
       .doc(payload.id)
       .delete()
       .then(() => {
-        res.status(201).send('Successfully added new team member');
+        const resMessage = payload.accepted
+          ? 'Successfully added new team member'
+          : 'Request to join team declined';
+        res.status(201).send(resMessage);
       });
   }
 );

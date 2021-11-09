@@ -24,6 +24,11 @@ module.exports = {
   plugins: ['@typescript-eslint', 'import'],
   rules: {
     'quotes': ['error', 'single'],
+    'operator-linebreak': [
+      'error',
+      'before',
+      {'overrides': {'&&': 'after', '||': 'after'}},
+    ],
     'space-before-function-paren': 'off',
     'arrow-body-style': ['error', 'always'],
     'import/no-unresolved': 0,
