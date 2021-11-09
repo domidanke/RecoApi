@@ -7,9 +7,7 @@ import jtrDecisionSchema, {
 } from '../models/team-request/join-team-request decision';
 import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
 import {TeamMember} from '../models/user/team-member';
-import newTeamRegistrationSchema, {
-  NewTeamRegistration,
-} from '../models/user/team';
+import newTeamRegistrationSchema, {Team} from '../models/user/team';
 import {v4 as uuid} from 'uuid';
 
 const router = express.Router();
@@ -67,11 +65,14 @@ router.post(
 );
 
 router.post(
-  '/create-team',
+  '/create',
   validateObjectMw(newTeamRegistrationSchema),
   async (req, res) => {
-    const team: NewTeamRegistration = req.body;
+    const team: Team = req.body;
     team.id = uuid();
+    team.creatorId = req.currentUserId;
+    team.createdDate = new Date();
+    team.admins = [req.currentUserId];
     await admin
       .firestore()
       .collection('teams')
