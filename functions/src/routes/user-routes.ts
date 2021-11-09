@@ -13,44 +13,40 @@ import newUserRegistrationSchema, {
 
 const router = express.Router();
 
-router.post(
-  '/registration-requests/:teamId',
-  validateIsCurrentUser(),
-  async (req, res) => {
-    await admin
-      .firestore()
-      .collection('teams')
-      .doc(req.params.teamId)
-      .get()
-      .then(async (teamSnap: DocumentSnapshot) => {
-        if (!teamSnap.exists) throw new Error('Team does not exist');
-        const team = teamSnap.data() as Team;
-        await admin
-          .firestore()
-          .collection('user')
-          .doc(req.currentUserId)
-          .get()
-          .then(async (userSnap: DocumentSnapshot) => {
-            if (!userSnap.exists) throw new Error('User does not exist');
-            const user = userSnap.data() as User;
-            const joinTeamRequest: JoinTeamRequest = {
-              id: uuid(),
-              requesterId: user.id,
-              requesterName: user.firstName + ' ' + user.lastName,
-              teamId: team.id,
-              teamName: team.name,
-              createdDate: new Date(),
-            };
-            await admin
-              .firestore()
-              .collection('joinTeamRequests')
-              .doc(joinTeamRequest.id)
-              .set(joinTeamRequest);
-            res.status(201).send('Successfully sent request to join team.');
-          });
-      });
-  }
-);
+router.post('/registration-requests/:teamId', async (req, res) => {
+  await admin
+    .firestore()
+    .collection('teams')
+    .doc(req.params.teamId)
+    .get()
+    .then(async (teamSnap: DocumentSnapshot) => {
+      if (!teamSnap.exists) throw new Error('Team does not exist');
+      const team = teamSnap.data() as Team;
+      await admin
+        .firestore()
+        .collection('user')
+        .doc(req.currentUserId)
+        .get()
+        .then(async (userSnap: DocumentSnapshot) => {
+          if (!userSnap.exists) throw new Error('User does not exist');
+          const user = userSnap.data() as User;
+          const joinTeamRequest: JoinTeamRequest = {
+            id: uuid(),
+            requesterId: user.id,
+            requesterName: user.firstName + ' ' + user.lastName,
+            teamId: team.id,
+            teamName: team.name,
+            createdDate: new Date(),
+          };
+          await admin
+            .firestore()
+            .collection('joinTeamRequests')
+            .doc(joinTeamRequest.id)
+            .set(joinTeamRequest);
+          res.status(201).send('Successfully sent request to join team.');
+        });
+    });
+});
 
 router.get('/registration-requests', async (req, res) => {
   await admin
