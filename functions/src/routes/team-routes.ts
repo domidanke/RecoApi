@@ -65,7 +65,7 @@ router.post(
 );
 
 router.post(
-  '/create',
+  '',
   validateObjectMw(newTeamRegistrationSchema),
   async (req, res) => {
     const team: Team = req.body;
