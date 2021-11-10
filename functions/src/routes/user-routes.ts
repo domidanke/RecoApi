@@ -6,9 +6,11 @@ import {Team} from '../models/user/team';
 import validateIsCurrentUser from '../middleware/current-user-validator';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
-import newUserRegistrationSchema, {
+import {
   NewUserRegistration,
+  newUserRegistrationSchema,
   User,
+  userSchema,
 } from '../models/user/user';
 
 const router = express.Router();
@@ -76,18 +78,50 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res) => {
 });
 
 router.post(
-  '/create-user',
+  '/register',
+  validateIsCurrentUser(),
   validateObjectMw(newUserRegistrationSchema),
   async (req, res) => {
-    const user: NewUserRegistration = req.body;
-    user.id = uuid();
+    const registerdUser: NewUserRegistration = req.body;
     await admin
       .firestore()
-      .collection('users')
-      .doc(user.id)
-      .set(user)
+      .doc(req.params.userId)
+      .update({
+        'firstName': registerdUser.firstName,
+        'lastName': registerdUser.lastName,
+        'gender': registerdUser.gender,
+        'dob': registerdUser.dob,
+        'height': registerdUser.height,
+        'weight': registerdUser.weight,
+      })
       .then(() => {
-        res.status(201).send('New User Successfully registered');
+        res.status(201).send('User Successfully registerd');
+      });
+  }
+);
+
+router.post(
+  '',
+  validateIsCurrentUser(),
+  validateObjectMw(userSchema),
+  async (req, res) => {
+    const updatedUser: User = req.body;
+    await admin
+      .firestore()
+      .doc(req.params.userId)
+      .update({
+        'email': updatedUser.email,
+        'recentTeamId': updatedUser.recentTeamId,
+        'teamIds': updatedUser.teamIds,
+        'firstName': updatedUser.firstName,
+        'lastName': updatedUser.lastName,
+        'gender': updatedUser.gender,
+        'dob': updatedUser.dob,
+        'height': updatedUser.height,
+        'weight': updatedUser.weight,
+      })
+      .then(() => {
+        res.status(201).send('User Successfully updated');
       });
   }
 );
