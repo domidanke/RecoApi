@@ -6,12 +6,7 @@ import {Team} from '../models/user/team';
 import validateIsCurrentUser from '../middleware/current-user-validator';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
-import {
-  NewUserRegistration,
-  newUserRegistrationSchema,
-  User,
-  userSchema,
-} from '../models/user/user';
+import {updateUserSchema, UpdateUser, User} from '../models/user/user';
 
 const router = express.Router();
 
@@ -78,11 +73,11 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res) => {
 });
 
 router.post(
-  '/register/:userId',
-  validateObjectMw(newUserRegistrationSchema),
+  '/register',
+  validateObjectMw(updateUserSchema),
   validateIsCurrentUser(),
   async (req, res) => {
-    const registerdUser: NewUserRegistration = req.body;
+    const registerdUser: UpdateUser = req.body;
     await admin
       .firestore()
       .doc(req.params.userId)
@@ -94,11 +89,11 @@ router.post(
 );
 
 router.post(
-  '/:userId',
-  validateObjectMw(userSchema),
+  '/',
+  validateObjectMw(updateUserSchema),
   validateIsCurrentUser(),
   async (req, res) => {
-    const updatedUser: User = req.body;
+    const updatedUser: UpdateUser = req.body;
     await admin
       .firestore()
       .doc(req.params.userId)
