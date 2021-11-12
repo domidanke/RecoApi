@@ -78,22 +78,15 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res) => {
 });
 
 router.post(
-  '/register',
-  validateIsCurrentUser(),
+  '/register/:userId',
   validateObjectMw(newUserRegistrationSchema),
+  validateIsCurrentUser(),
   async (req, res) => {
     const registerdUser: NewUserRegistration = req.body;
     await admin
       .firestore()
       .doc(req.params.userId)
-      .update({
-        'firstName': registerdUser.firstName,
-        'lastName': registerdUser.lastName,
-        'gender': registerdUser.gender,
-        'dob': registerdUser.dob,
-        'height': registerdUser.height,
-        'weight': registerdUser.weight,
-      })
+      .update(registerdUser)
       .then(() => {
         res.status(201).send('User Successfully registerd');
       });
@@ -101,25 +94,15 @@ router.post(
 );
 
 router.post(
-  '',
-  validateIsCurrentUser(),
+  '/:userId',
   validateObjectMw(userSchema),
+  validateIsCurrentUser(),
   async (req, res) => {
     const updatedUser: User = req.body;
     await admin
       .firestore()
       .doc(req.params.userId)
-      .update({
-        'email': updatedUser.email,
-        'recentTeamId': updatedUser.recentTeamId,
-        'teamIds': updatedUser.teamIds,
-        'firstName': updatedUser.firstName,
-        'lastName': updatedUser.lastName,
-        'gender': updatedUser.gender,
-        'dob': updatedUser.dob,
-        'height': updatedUser.height,
-        'weight': updatedUser.weight,
-      })
+      .update(updatedUser)
       .then(() => {
         res.status(201).send('User Successfully updated');
       });

@@ -44,13 +44,13 @@ export const userSchema: SchemaOf<User> = object({
   email: string().required('Email is missing').email(),
   recentTeamId: string().required('Recent Team Id is missing'),
   teamIds: array(string().required('Team Ids are missing')),
-  firstName: string().required('Firstname is missing'),
-  lastName: string().required('Lastname is missing'),
+  firstName: string().required('First Name is missing'),
+  lastName: string().required('Last Name is missing'),
   gender: bool().required('Gender is missing'),
   dob: date().required('Date is missing'),
   height: number().required('Height is missing').min(0),
   weight: number().required('Weight is missing').min(0),
-  createdDate: date().required('CreatedDate is missing'),
+  createdDate: date().required('Created Date is missing'),
 });
 
 export const newUserRegistrationSchema: SchemaOf<NewUserRegistration> = object({
