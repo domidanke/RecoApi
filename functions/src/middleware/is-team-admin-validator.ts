@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
-import {Team} from '../models/user/team';
+import {Team} from '../models/team/team';
 
 // ! This middleware requires a teamId param inside the route
 const validateIsTeamAdmin = () => {

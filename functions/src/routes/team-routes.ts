@@ -3,12 +3,12 @@ import * as admin from 'firebase-admin';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
 import jtrDecisionSchema, {
-  JoinTeamRequestDecision,
+  JoinTeamRequestDecisionPayload,
 } from '../models/team-request/join-team-request decision';
 import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
-import {TeamMember} from '../models/user/team-member';
-import newTeamRegistrationSchema, {Team} from '../models/user/team';
+import {TeamMember} from '../models/team/team-member';
 import {v4 as uuid} from 'uuid';
+import newTeamRegistrationSchema, {Team} from '../models/team/team';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post(
   validateObjectMw(jtrDecisionSchema),
   validateIsTeamAdmin(),
   async (req, res) => {
-    const payload = req.body as JoinTeamRequestDecision;
+    const payload = req.body as JoinTeamRequestDecisionPayload;
     if (payload.accepted) {
       const newTeamMember: TeamMember = {
         userId: payload.requesterId,

@@ -7,7 +7,7 @@ const validateIsCurrentUser = () => {
     next: NextFunction
   ): Promise<void> => {
     if (
-      req.body.userId == req.currentUserId ||
+      req.body.id == req.currentUserId ||
       req.params.userId == req.currentUserId
     ) {
       next();

@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {QueryDocumentSnapshot} from 'firebase-functions/v1/firestore';
-import {Team} from '../models/user/team';
+import {Team} from '../models/team/team';
 
 admin.initializeApp();
 const db = admin.firestore();

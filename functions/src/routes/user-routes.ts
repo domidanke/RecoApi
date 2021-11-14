@@ -2,11 +2,12 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {v4 as uuid} from 'uuid';
-import {Team} from '../models/user/team';
 import validateIsCurrentUser from '../middleware/current-user-validator';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
-import {updateUserSchema, UpdateUser, User} from '../models/user/user';
+import {Team} from '../models/team/team';
+import {registerUserPayloadSchema} from '../models/user/payloads/register-user';
+import {User} from '../models/user/user';
 
 const router = express.Router();
 
@@ -74,32 +75,17 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res) => {
 
 router.post(
   '/register',
-  validateObjectMw(updateUserSchema),
+  validateObjectMw(registerUserPayloadSchema),
   validateIsCurrentUser(),
   async (req, res) => {
-    const registerdUser: UpdateUser = req.body;
+    const userToRegister: User = req.body;
+    userToRegister.teamIds = []; // Ensure that property is array and not null
     await admin
       .firestore()
-      .doc(req.params.userId)
-      .update(registerdUser)
+      .doc(userToRegister.id)
+      .set(userToRegister)
       .then(() => {
         res.status(201).send('User Successfully registerd');
-      });
-  }
-);
-
-router.post(
-  '/',
-  validateObjectMw(updateUserSchema),
-  validateIsCurrentUser(),
-  async (req, res) => {
-    const updatedUser: UpdateUser = req.body;
-    await admin
-      .firestore()
-      .doc(req.params.userId)
-      .update(updatedUser)
-      .then(() => {
-        res.status(201).send('User Successfully updated');
       });
   }
 );

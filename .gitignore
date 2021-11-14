@@ -68,3 +68,6 @@ node_modules/
 
 # service api key needs protection
 /functions/service-account.json
+
+# local prod data copy
+/functions/prod-data-copy
