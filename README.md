@@ -22,3 +22,10 @@ and finally run ```firebase emulators:start --inspect-functions``` to emulate fi
 In your IDE, run 'Attach' on the Node Application.
 
 This repo uses eslint.
+
+To run local emulator:
+Install Google Cloud Sdk, then run:
+```gcloud config set project your-project-name```
+```gcloud firestore export gs://your-project-name.appspot.com/your-choosen-folder-name```
+```gsutil cp -r gs://my-project-bucket-id.appspot.com/folder ./```
+```firebase emulators:start --import ./your-choosen-folder-name```
