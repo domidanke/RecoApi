@@ -39,17 +39,18 @@ router.post(
     const payload = req.body as JoinTeamRequestDecisionPayload;
     if (payload.accepted) {
       const newTeamMember: TeamMember = {
-        userId: payload.requesterId,
+        id: payload.requesterId,
         active: true,
         teamMemberTypeCode: payload.teamMemberTypeCode ?? 'PLAY',
         joinedDate: new Date(),
+        nickName: '',
       };
       await admin
         .firestore()
         .collection('teams')
         .doc(req.params.teamId)
         .collection('teamMembers')
-        .doc(newTeamMember.userId)
+        .doc(newTeamMember.id)
         .set(newTeamMember);
     }
 
