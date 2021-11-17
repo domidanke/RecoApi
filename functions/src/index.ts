@@ -12,14 +12,14 @@ const cors = require('cors')({origin: true});
 const onCreateTeam = require('./triggers/team-created-trigger');
 
 const app = express();
-// The Firebase Admin SDK to access Firestore.
+
 app.use(cors);
 app.use(validateFirebaseIdToken);
-app.use(errorHandler);
 app.use('/dataFillers', dataFillerRoutes);
 app.use('/team', teamRoutes);
 app.use('/injury', injuryRoutes);
 app.use('/user', userRoutes);
+app.use(errorHandler); // ! This needs to be here so the middleware is the last one to be called.
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   functions.logger.info('Hello logs!', {structuredData: true});
@@ -31,7 +31,7 @@ exports.helpers = functions.https.onRequest(app);
 exports.onCreateTeam = onCreateTeam;
 
 exports.scheduledFirestoreExport = functions.pubsub
-  .schedule('every day 03:00')
+  .schedule('every monday 03:00')
   .timeZone('Europe/Paris')
   .onRun(() => {
     const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
