@@ -1,4 +1,19 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "injuryStages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "Code",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Order",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

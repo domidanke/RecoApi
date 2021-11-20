@@ -22,7 +22,7 @@ router.post('/bodyPart', validateObjectMw(bodyPartSchema), async (req, res) => {
     .collection('bodyParts')
     .doc(bodyPart.id)
     .set(bodyPart);
-  res.status(201).send();
+  res.status(204).send();
 });
 
 router.post(
