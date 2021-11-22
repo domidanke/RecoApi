@@ -77,14 +77,10 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res, next) => {
     .then((userSnap: DocumentSnapshot) => {
       if (!userSnap.exists) {
         next(new StatusError(404, 'User does not exist'));
-        // throw new StatusError(404, 'User does not exist');
       } else {
         const user = userSnap.data() as User;
         res.status(200).send(user);
       }
-    })
-    .catch((err: Error | StatusError) => {
-      next(err);
     });
 });
 

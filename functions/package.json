@@ -3,7 +3,7 @@
   "scripts": {
     "emulate": "run-p start:*",
     "start:watch": "tsc -w",
-    "start:firebase": "firebase emulators:start --import ./prod-data-copy",
+    "start:firebase": "firebase emulators:start --inspect-functions --import ./prod-data-copy",
     "watch": "tsc --watch",
     "lint": "eslint --ext .js,.ts .",
     "postinstall": "npm run typings",
