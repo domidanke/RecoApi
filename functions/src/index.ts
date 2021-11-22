@@ -1,4 +1,3 @@
-const dataFillerRoutes = require('./routes/data-filler-routes');
 const teamRoutes = require('./routes/team-routes');
 const injuryRoutes = require('./routes/injury-routes');
 const userRoutes = require('./routes/user-routes');
@@ -15,7 +14,6 @@ const app = express();
 
 app.use(cors);
 app.use(validateFirebaseIdToken);
-app.use('/dataFillers', dataFillerRoutes);
 app.use('/team', teamRoutes);
 app.use('/injury', injuryRoutes);
 app.use('/user', userRoutes);
@@ -26,7 +24,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send('Hello from Firebase!');
 });
 
-exports.helpers = functions.https.onRequest(app);
+exports.reco = functions.https.onRequest(app);
 
 exports.onCreateTeam = onCreateTeam;
 

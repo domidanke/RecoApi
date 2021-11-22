@@ -90,6 +90,7 @@ router.post(
   validateIsCurrentUser(),
   async (req, res) => {
     const userToRegister: User = req.body;
+    userToRegister.createdDate = new Date();
     userToRegister.teamIds = []; // Ensure that property is array and not null
     await admin
       .firestore()
