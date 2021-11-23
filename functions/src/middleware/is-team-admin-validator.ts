@@ -3,17 +3,18 @@ import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {Team} from '../models/team/team';
 
-// ! This middleware requires a teamId property inside the request body
+// ! This middleware requires a teamId property inside the request body or in the params
 const validateIsTeamAdmin = () => {
   return async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
+    const teamId = req.body.teamId ? req.body.teamId : req.params.teamId;
     await admin
       .firestore()
       .collection('teams')
-      .doc(req.body.teamId)
+      .doc(teamId)
       .get()
       .then((snap: DocumentSnapshot) => {
         const team = snap.data() as Team;

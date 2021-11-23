@@ -13,7 +13,7 @@ import newTeamRegistrationSchema, {Team} from '../models/team/team';
 const router = express.Router();
 
 router.get(
-  ':teamId/registration-requests',
+  '/:teamId/registration-requests',
   validateIsTeamAdmin(),
   async (req, res) => {
     await admin
@@ -26,10 +26,22 @@ router.get(
         for (const doc of snaps.docs) {
           jtrList.push(doc.data() as JoinTeamRequest);
         }
-        res.status(200).send(JSON.stringify(jtrList));
+        res.status(200).send(jtrList);
       });
   }
 );
+
+router.post('/registration-request', async (req, res) => {
+  const payload = req.body as JoinTeamRequest;
+  await admin
+    .firestore()
+    .collection('joinTeamRequests')
+    .doc(payload.id)
+    .set(payload)
+    .then(() => {
+      res.status(201).send('Successfully added JoinTeamRequest');
+    });
+});
 
 router.post(
   '/registration-requests',
