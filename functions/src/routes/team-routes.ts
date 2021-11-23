@@ -32,7 +32,7 @@ router.get(
 );
 
 router.post(
-  ':teamId/registration-requests',
+  '/registration-requests',
   validateObjectMw(jtrDecisionSchema),
   validateIsTeamAdmin(),
   async (req, res) => {
@@ -48,10 +48,20 @@ router.post(
       await admin
         .firestore()
         .collection('teams')
-        .doc(req.params.teamId)
+        .doc(payload.teamId)
         .collection('teamMembers')
         .doc(newTeamMember.id)
         .set(newTeamMember);
+
+      const arrayUnion = admin.firestore.FieldValue.arrayUnion;
+      await admin
+        .firestore()
+        .collection('users')
+        .doc(payload.requesterId)
+        .update({
+          'recentTeamId': payload.teamId,
+          'teamIds': arrayUnion(payload.teamId),
+        });
     }
 
     await admin

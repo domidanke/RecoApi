@@ -1,8 +1,9 @@
 import {bool, object, SchemaOf, string} from 'yup';
 
 export interface JoinTeamRequestDecisionPayload {
-  id: string;
+  id: string; // JoinTeamRequest Document Id
   requesterId: string;
+  teamId: string;
   accepted: boolean;
   teamMemberTypeCode?: string;
 }
@@ -10,6 +11,7 @@ export interface JoinTeamRequestDecisionPayload {
 const jtrDecisionSchema: SchemaOf<JoinTeamRequestDecisionPayload> = object({
   id: string().required('Join-Request Id is missing'),
   requesterId: string().required('Requester Id is missing'),
+  teamId: string().required('Team Id is missing'),
   accepted: bool().required('Decision is missing'),
   teamMemberTypeCode: string(),
 });

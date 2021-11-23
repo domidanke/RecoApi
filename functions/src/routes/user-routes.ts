@@ -13,44 +13,52 @@ import {StatusError} from '../models/other/status-error';
 const router = express.Router();
 
 router.post('/registration-requests/:teamId', async (req, res, next) => {
-  await admin
-    .firestore()
-    .collection('teams')
-    .doc(req.params.teamId)
-    .get()
-    .then(async (teamSnap: DocumentSnapshot) => {
-      if (!teamSnap.exists) {
-        next(new StatusError(404, 'Team does not exist'));
-      } else {
-        const team = teamSnap.data() as Team;
-        await admin
-          .firestore()
-          .collection('users')
-          .doc(req.currentUserId)
-          .get()
-          .then(async (userSnap: DocumentSnapshot) => {
-            if (!userSnap.exists) {
-              next(new StatusError(404, 'User does not exist'));
-            } else {
-              const user = userSnap.data() as User;
-              const joinTeamRequest: JoinTeamRequest = {
-                id: uuid(),
-                requesterId: user.id,
-                requesterName: user.firstName + ' ' + user.lastName,
-                teamId: team.id,
-                teamName: team.name,
-                createdDate: new Date(),
-              };
-              await admin
-                .firestore()
-                .collection('joinTeamRequests')
-                .doc(joinTeamRequest.id)
-                .set(joinTeamRequest);
-              res.status(201).send('Successfully sent request to join team.');
-            }
-          });
-      }
-    });
+  const exists = await joinTeamRequestExists(
+    req.currentUserId,
+    req.params.teamId
+  );
+  if (exists) {
+    next(new StatusError(400, 'Already requesting to join this team'));
+  } else {
+    await admin
+      .firestore()
+      .collection('teams')
+      .doc(req.params.teamId)
+      .get()
+      .then(async (teamSnap: DocumentSnapshot) => {
+        if (!teamSnap.exists) {
+          next(new StatusError(404, 'Team does not exist'));
+        } else {
+          const team = teamSnap.data() as Team;
+          await admin
+            .firestore()
+            .collection('users')
+            .doc(req.currentUserId)
+            .get()
+            .then(async (userSnap: DocumentSnapshot) => {
+              if (!userSnap.exists) {
+                next(new StatusError(404, 'User does not exist'));
+              } else {
+                const user = userSnap.data() as User;
+                const joinTeamRequest: JoinTeamRequest = {
+                  id: uuid(),
+                  requesterId: user.id,
+                  requesterName: user.firstName + ' ' + user.lastName,
+                  teamId: team.id,
+                  teamName: team.name,
+                  createdDate: new Date(),
+                };
+                await admin
+                  .firestore()
+                  .collection('joinTeamRequests')
+                  .doc(joinTeamRequest.id)
+                  .set(joinTeamRequest);
+                res.status(201).send('Successfully sent request to join team.');
+              }
+            });
+        }
+      });
+  }
 });
 
 router.get('/registration-requests', async (req, res) => {
@@ -102,5 +110,22 @@ router.post(
       });
   }
 );
+
+async function joinTeamRequestExists(userId: string, teamId: string) {
+  return await admin
+    .firestore()
+    .collection('joinTeamRequests')
+    .where('requesterId', '==', userId)
+    .get()
+    .then((snaps) => {
+      for (const doc of snaps.docs) {
+        const jtr = doc.data() as JoinTeamRequest;
+        if (jtr.teamId === teamId) {
+          return true;
+        }
+      }
+      return false;
+    });
+}
 
 module.exports = router;
