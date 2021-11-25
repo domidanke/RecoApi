@@ -1,7 +1,9 @@
+import {object, SchemaOf, string} from 'yup';
+
 export interface Injury {
   id: string;
   code: string;
-  desc: Date;
+  desc: string;
   details: string;
   bodyPartCode: string;
   stages: InjuryStage[];
@@ -25,3 +27,17 @@ export interface StageExercise {
   break: number;
   order: number;
 }
+
+export interface CreateUserInjuryPayload {
+  userId: string;
+  injury: string;
+}
+
+const createUserInjuryPayloadSchema: SchemaOf<CreateUserInjuryPayload> = object(
+  {
+    userId: string().required('User Id is missing'),
+    injury: string().required('Injury Code is missing'),
+  }
+);
+
+export default createUserInjuryPayloadSchema;

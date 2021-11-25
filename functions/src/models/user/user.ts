@@ -10,4 +10,11 @@ export interface User {
   height: number;
   weight: number;
   createdDate: Date;
+  currentInjury: UserInjury;
+}
+
+export interface UserInjury {
+  injury: string;
+  createdDate: Date;
+  injuryStage: string;
 }
