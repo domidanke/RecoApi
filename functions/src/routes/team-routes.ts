@@ -94,8 +94,24 @@ router.post(
       .collection('teams')
       .doc(team.id)
       .set(team)
-      .then(() => {
-        res.status(201).send('Successfully created new Team');
+      .then(async () => {
+        const firstMember: TeamMember = {
+          id: req.currentUserId,
+          joinedDate: team.createdDate,
+          teamMemberTypeCode: 'COA',
+          active: true,
+          nickName: '',
+        };
+        await admin
+          .firestore()
+          .collection('teams')
+          .doc(team.id)
+          .collection('teamMembers')
+          .doc(firstMember.id)
+          .set(firstMember)
+          .then(() => {
+            res.status(201).send('Successfully created new Team');
+          });
       });
   }
 );
