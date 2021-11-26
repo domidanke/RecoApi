@@ -22,6 +22,7 @@ const validateFirebaseIdToken = async (
           const token = decodedToken as DecodedToken;
           functions.logger.log('ID Token correctly decoded', token);
           req.currentUserId = token.uid;
+          req.currentUserEmail = token.email;
           next();
         });
     } catch (error) {

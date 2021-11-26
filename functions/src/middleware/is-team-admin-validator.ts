@@ -10,18 +10,21 @@ const validateIsTeamAdmin = () => {
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const teamId = req.body.teamId ?? req.params.teamId;
     await admin
       .firestore()
       .collection('teams')
-      .doc(teamId)
+      .doc(req.params.teamId)
       .get()
       .then((snap: DocumentSnapshot) => {
-        const team = snap.data() as Team;
-        if (team.admins.includes(req.currentUserId)) {
-          next();
+        if (!snap.exists) {
+          res.status(400).send('Team does not exist');
         } else {
-          res.status(403).send('You are not authorized for this action');
+          const team = snap.data() as Team;
+          if (team.admins.includes(req.currentUserId)) {
+            next();
+          } else {
+            res.status(403).send('You are not authorized for this action');
+          }
         }
       });
   };

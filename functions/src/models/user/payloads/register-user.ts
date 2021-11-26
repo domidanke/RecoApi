@@ -1,8 +1,6 @@
 import {date, number, object, SchemaOf, string} from 'yup';
 
 export interface RegisterUserPayload {
-  id: string;
-  email: string;
   firstName: string;
   lastName: string;
   gender: string;
@@ -12,8 +10,6 @@ export interface RegisterUserPayload {
 }
 
 export const registerUserPayloadSchema: SchemaOf<RegisterUserPayload> = object({
-  id: string().required('Id is missing'),
-  email: string().required('Email is missing'),
   firstName: string().required('Firstname is missing'),
   lastName: string().required('Lastname is missing'),
   gender: string().required('Gender is missing'),

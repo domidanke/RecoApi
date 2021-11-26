@@ -2,23 +2,21 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {v4 as uuid} from 'uuid';
-import validateIsCurrentUser from '../middleware/current-user-validator';
 import {JoinTeamRequest} from '../models/team-request/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
 import {Team} from '../models/team/team';
 import {registerUserPayloadSchema} from '../models/user/payloads/register-user';
 import {User} from '../models/user/user';
-import {StatusError} from '../models/other/status-error';
 
 const router = express.Router();
 
-router.post('/registration-requests/:teamId', async (req, res, next) => {
+router.post('/registration-requests/:teamId', async (req, res) => {
   const exists = await joinTeamRequestExists(
     req.currentUserId,
     req.params.teamId
   );
   if (exists) {
-    next(new StatusError(400, 'Already requesting to join this team'));
+    res.send(404).send('Already requesting to join this team');
   } else {
     await admin
       .firestore()
@@ -27,7 +25,7 @@ router.post('/registration-requests/:teamId', async (req, res, next) => {
       .get()
       .then(async (teamSnap: DocumentSnapshot) => {
         if (!teamSnap.exists) {
-          next(new StatusError(404, 'Team does not exist'));
+          res.send(404).send('Team does not exist');
         } else {
           const team = teamSnap.data() as Team;
           await admin
@@ -37,7 +35,7 @@ router.post('/registration-requests/:teamId', async (req, res, next) => {
             .get()
             .then(async (userSnap: DocumentSnapshot) => {
               if (!userSnap.exists) {
-                next(new StatusError(404, 'User does not exist'));
+                res.send(404).send('User does not exist');
               } else {
                 const user = userSnap.data() as User;
                 const joinTeamRequest: JoinTeamRequest = {
@@ -76,18 +74,17 @@ router.get('/registration-requests', async (req, res) => {
     });
 });
 
-router.get('/:userId', validateIsCurrentUser(), async (req, res, next) => {
+router.get('', async (req, res) => {
   await admin
     .firestore()
     .collection('users')
-    .doc(req.params.userId)
+    .doc(req.currentUserId)
     .get()
     .then((userSnap: DocumentSnapshot) => {
       if (!userSnap.exists) {
-        next(new StatusError(404, 'User does not exist'));
+        res.send(404).send('User does not exist');
       } else {
-        const user = userSnap.data() as User;
-        res.status(200).send(user);
+        res.status(200).send(userSnap.data() as User);
       }
     });
 });
@@ -95,9 +92,10 @@ router.get('/:userId', validateIsCurrentUser(), async (req, res, next) => {
 router.post(
   '',
   validateObjectMw(registerUserPayloadSchema),
-  validateIsCurrentUser(),
   async (req, res) => {
     const userToRegister: User = req.body;
+    userToRegister.id = req.currentUserId;
+    userToRegister.email = req.currentUserEmail;
     userToRegister.createdDate = new Date();
     userToRegister.teamIds = []; // Ensure that property is array and not null
     await admin
@@ -106,7 +104,7 @@ router.post(
       .doc(userToRegister.id)
       .set(userToRegister)
       .then(() => {
-        res.status(201).send('User Successfully registerd');
+        res.status(201).send('Successfully registered User');
       });
   }
 );

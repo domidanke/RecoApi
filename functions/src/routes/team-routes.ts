@@ -33,20 +33,8 @@ router.get(
   }
 );
 
-router.post('/registration-request', async (req, res) => {
-  const payload = req.body as JoinTeamRequest;
-  await admin
-    .firestore()
-    .collection('joinTeamRequests')
-    .doc(payload.id)
-    .set(payload)
-    .then(() => {
-      res.status(201).send('Successfully added JoinTeamRequest');
-    });
-});
-
 router.post(
-  '/registration-requests',
+  '/:teamId/registration-requests',
   validateObjectMw(jtrDecisionSchema),
   validateIsTeamAdmin(),
   async (req, res) => {
@@ -62,7 +50,7 @@ router.post(
       await admin
         .firestore()
         .collection('teams')
-        .doc(payload.teamId)
+        .doc(req.params.teamId)
         .collection('teamMembers')
         .doc(newTeamMember.id)
         .set(newTeamMember);
@@ -73,8 +61,8 @@ router.post(
         .collection('users')
         .doc(payload.requesterId)
         .update({
-          'recentTeamId': payload.teamId,
-          'teamIds': arrayUnion(payload.teamId),
+          'recentTeamId': req.params.teamId,
+          'teamIds': arrayUnion(req.params.teamId),
         });
     }
 
@@ -112,7 +100,7 @@ router.post(
   }
 );
 
-router.get('/:teamId/injuries', validateIsTeamMember(), async (req, res) => {
+router.get('/:teamId/members', validateIsTeamMember(), async (req, res) => {
   await admin
     .firestore()
     .collection('teams')
@@ -133,12 +121,71 @@ router.get('/:teamId/injuries', validateIsTeamMember(), async (req, res) => {
         .then((userSnaps) => {
           const users: User[] = [];
           for (const doc of userSnaps.docs) {
-            const user = doc.data() as User;
-            if (user.currentInjury) users.push(user);
+            users.push(doc.data() as User);
           }
           res.status(200).send(users);
         });
     });
 });
+
+router.post(
+  '/:teamId/add-admin/:userId',
+  validateIsTeamAdmin(),
+  async (req, res) => {
+    if (await isTeamMember(req.params.userId, req.params.teamId)) {
+      const arrayUnion = admin.firestore.FieldValue.arrayUnion;
+      await admin
+        .firestore()
+        .collection('teams')
+        .doc(req.params.teamId)
+        .update({
+          'admins': arrayUnion(req.params.userId),
+        });
+      res.status(201).send('Successfully added admin');
+    } else {
+      res.status(400).send('User is not part of this team');
+    }
+  }
+);
+
+router.post(
+  '/:teamId/remove-admin/:userId',
+  validateIsTeamAdmin(),
+  async (req, res) => {
+    if (await isTeamMember(req.params.userId, req.params.teamId)) {
+      const arrayRemove = admin.firestore.FieldValue.arrayRemove;
+      const doc = admin.firestore().collection('teams').doc(req.params.teamId);
+      const x = await doc.get();
+      const team = x.data() as Team;
+      if (!team.admins.includes(req.params.userId)) {
+        res.status(400).send('User is not an admin');
+      } else {
+        if (team.admins.length > 1) {
+          doc.update({
+            'admins': arrayRemove(req.params.userId),
+          });
+          res.status(200).send('Successfully removed admin');
+        } else {
+          res.status(400).send('You cannot remove the last admin');
+        }
+      }
+    } else {
+      res.status(400).send('User is not part of this team');
+    }
+  }
+);
+
+async function isTeamMember(userId: string, teamId: string): Promise<boolean> {
+  return await admin
+    .firestore()
+    .collection('teams')
+    .doc(teamId)
+    .collection('teamMembers')
+    .doc(userId)
+    .get()
+    .then((snap) => {
+      return snap.exists;
+    });
+}
 
 module.exports = router;

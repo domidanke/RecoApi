@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import * as admin from 'firebase-admin';
 import {v4 as uuid} from 'uuid';
-import {StatusError} from '../models/other/status-error';
 
 export interface CustomError extends Error {
   id: string;
@@ -14,7 +13,7 @@ export interface CustomError extends Error {
 }
 
 const errorHandler = async function (
-  err: Error | StatusError,
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction
@@ -33,11 +32,7 @@ const errorHandler = async function (
     .collection('errorLogs')
     .doc(customError.id)
     .set(customError);
-  if (err instanceof StatusError) {
-    res.status(err.status).send(err.message);
-  } else {
-    res.status(500).send('Something went wrong');
-  }
+  res.status(500).send('Something went wrong');
   next();
 };
 

@@ -7,7 +7,6 @@ import createUserInjuryPayloadSchema, {
   InjuryStage,
 } from '../models/injury/injury';
 import validateObjectMw from '../middleware/request-validator';
-import {StatusError} from '../models/other/status-error';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {User, UserInjury} from '../models/user/user';
 
@@ -17,7 +16,7 @@ router.post(
   '',
   validateObjectMw(createUserInjuryPayloadSchema),
   validateIsCurrentUser(),
-  async (req, res, next) => {
+  async (req, res) => {
     const injuryPayload = req.body as CreateUserInjuryPayload;
     await admin
       .firestore()
@@ -27,7 +26,7 @@ router.post(
       .then(async (userSnap: DocumentSnapshot) => {
         const user = userSnap.data() as User;
         if (user.currentInjury) {
-          next(new StatusError(400, 'User already has injury'));
+          res.status(400).send('User already has injury');
         } else {
           await admin
             .firestore()
@@ -37,7 +36,7 @@ router.post(
             .get()
             .then(async (injSnaps) => {
               if (injSnaps.empty) {
-                next(new StatusError(404, 'Injury does not exist'));
+                res.status(404).send('Injury does not exist');
               } else {
                 const injury = injSnaps.docs[0].data() as Injury;
                 await admin

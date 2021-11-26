@@ -9,7 +9,7 @@ const validateIsTeamMember = () => {
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const teamId = req.body.teamId ?? req.params.teamId;
+    const teamId = req.params.teamId;
     await admin
       .firestore()
       .collection('teams')
