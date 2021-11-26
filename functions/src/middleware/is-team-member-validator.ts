@@ -1,10 +1,9 @@
 import {Request, Response, NextFunction} from 'express';
 import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
-import {Team} from '../models/team/team';
 
 // ! This middleware requires a teamId property inside the request body or in the params
-const validateIsTeamAdmin = () => {
+const validateIsTeamMember = () => {
   return async (
     req: Request,
     res: Response,
@@ -15,16 +14,17 @@ const validateIsTeamAdmin = () => {
       .firestore()
       .collection('teams')
       .doc(teamId)
+      .collection('teamMembers')
+      .doc(req.currentUserId)
       .get()
       .then((snap: DocumentSnapshot) => {
-        const team = snap.data() as Team;
-        if (team.admins.includes(req.currentUserId)) {
+        if (snap.exists) {
           next();
         } else {
-          res.status(403).send('You are not authorized for this action');
+          res.status(403).send('You are not part of this team');
         }
       });
   };
 };
 
-export default validateIsTeamAdmin;
+export default validateIsTeamMember;

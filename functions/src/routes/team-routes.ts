@@ -9,6 +9,8 @@ import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
 import {TeamMember} from '../models/team/team-member';
 import {v4 as uuid} from 'uuid';
 import newTeamRegistrationSchema, {Team} from '../models/team/team';
+import validateIsTeamMember from '../middleware/is-team-member-validator';
+import {User} from '../models/user/user';
 
 const router = express.Router();
 
@@ -109,5 +111,34 @@ router.post(
       });
   }
 );
+
+router.get('/:teamId/injuries', validateIsTeamMember(), async (req, res) => {
+  await admin
+    .firestore()
+    .collection('teams')
+    .doc(req.params.teamId)
+    .collection('teamMembers')
+    .get()
+    .then(async (memberSnaps) => {
+      const memberIds: string[] = [];
+      for (const doc of memberSnaps.docs) {
+        const member = doc.data() as TeamMember;
+        memberIds.push(member.id);
+      }
+      await admin
+        .firestore()
+        .collection('users')
+        .where('id', 'in', memberIds)
+        .get()
+        .then((userSnaps) => {
+          const users: User[] = [];
+          for (const doc of userSnaps.docs) {
+            const user = doc.data() as User;
+            if (user.currentInjury) users.push(user);
+          }
+          res.status(200).send(users);
+        });
+    });
+});
 
 module.exports = router;
