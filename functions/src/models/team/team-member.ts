@@ -2,6 +2,6 @@ export interface TeamMember {
   id: string;
   active: boolean;
   teamMemberTypeCode: string;
-  joinedDate: Date;
+  dateJoined: Date;
   nickName: string;
 }

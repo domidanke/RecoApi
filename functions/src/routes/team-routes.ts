@@ -44,7 +44,7 @@ router.post(
         id: payload.requesterId,
         active: true,
         teamMemberTypeCode: payload.teamMemberTypeCode ?? 'PLAY',
-        joinedDate: new Date(),
+        dateJoined: new Date(),
         nickName: '',
       };
       await admin
@@ -97,7 +97,7 @@ router.post(
       .then(async () => {
         const firstMember: TeamMember = {
           id: req.currentUserId,
-          joinedDate: team.createdDate,
+          dateJoined: team.createdDate,
           teamMemberTypeCode: 'COA',
           active: true,
           nickName: '',
@@ -191,6 +191,41 @@ router.post(
   }
 );
 
+router.post(
+  '/:teamId/remove-user/:userId',
+  validateIsTeamAdmin(),
+  async (req, res) => {
+    if (await isTeamMember(req.params.userId, req.params.teamId)) {
+      if (!(await isTeamAdmin(req.params.userId, req.params.teamId))) {
+        await admin
+          .firestore()
+          .collection('teams')
+          .doc(req.params.teamId)
+          .collection('teamMembers')
+          .doc(req.params.userId)
+          .delete();
+        res.status(200).send('Successfully removed Team Member');
+      } else {
+        res.status(400).send('Can´t delete Admin from Team');
+      }
+    } else {
+      res.status(400).send('User is not part of this team');
+    }
+  }
+);
+
+async function isTeamAdmin(userId: string, teamId: string): Promise<boolean> {
+  return await admin
+    .firestore()
+    .collection('teams')
+    .doc(teamId)
+    .get()
+    .then((snap) => {
+      const team = snap.data() as Team;
+      return team.admins.includes(userId);
+    });
+}
+
 async function isTeamMember(userId: string, teamId: string): Promise<boolean> {
   return await admin
     .firestore()
@@ -199,9 +234,7 @@ async function isTeamMember(userId: string, teamId: string): Promise<boolean> {
     .collection('teamMembers')
     .doc(userId)
     .get()
-    .then((snap) => {
-      return snap.exists;
-    });
+    .then((snap) => snap.exists);
 }
 
 module.exports = router;
