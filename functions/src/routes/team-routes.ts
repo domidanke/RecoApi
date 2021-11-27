@@ -234,7 +234,9 @@ async function isTeamMember(userId: string, teamId: string): Promise<boolean> {
     .collection('teamMembers')
     .doc(userId)
     .get()
-    .then((snap) => snap.exists);
+    .then((snap) => {
+      return snap.exists;
+    });
 }
 
 module.exports = router;

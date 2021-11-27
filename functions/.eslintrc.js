@@ -30,7 +30,7 @@ module.exports = {
       {'overrides': {'&&': 'after', '||': 'after'}},
     ],
     'space-before-function-paren': 'off',
-    'arrow-body-style': ['error', 'as-needed'],
+    'arrow-body-style': ['error', 'always'],
     'import/no-unresolved': 0,
     'require-jsdoc': 0,
     'max-len': ['warn', {code: 100}],
