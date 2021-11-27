@@ -136,7 +136,9 @@ router.post('/:injuryId/:stageId', async (req, res) => {
           res.send(404).send('Stage does not exist');
         } else {
           const stage = stageSnap.data() as InjuryStage;
-          const exerciseIds = stage.exercises.map((x) => x.id);
+          const exerciseIds = stage.exercises.map((x) => {
+            return x.id;
+          });
           await admin
             .firestore()
             .collection('exercises')
