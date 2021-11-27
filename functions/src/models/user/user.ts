@@ -14,7 +14,9 @@ export interface User {
 }
 
 export interface UserInjury {
+  injuryId: string;
   injury: string;
   createdDate: Date;
+  injuryStageId: string;
   injuryStage: string;
 }
