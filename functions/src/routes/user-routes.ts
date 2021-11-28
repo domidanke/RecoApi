@@ -124,7 +124,7 @@ router.post('/:injuryId/:stageId', async (req, res) => {
     .doc(req.params.injuryId)
     .get();
   if (!injSnap.exists) {
-    res.send(404).send('Injury does not exist');
+    res.status(404).send('Injury does not exist');
   } else {
     const injury = injSnap.data() as Injury;
     await injSnap.ref
@@ -133,7 +133,7 @@ router.post('/:injuryId/:stageId', async (req, res) => {
       .get()
       .then(async (stageSnap) => {
         if (!stageSnap.exists) {
-          res.send(404).send('Stage does not exist');
+          res.status(404).send('Stage does not exist');
         } else {
           const stage = stageSnap.data() as InjuryStage;
           const exerciseIds = stage.exercises.map((x) => {
