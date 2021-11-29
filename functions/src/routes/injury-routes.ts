@@ -88,7 +88,7 @@ router.get('/:injuryId/:stageId', async (req, res) => {
               for (const doc of exSnaps.docs) {
                 const exercise = doc.data() as Exercise;
                 const stageExercise = stage.exercises.find((x) => {
-                  x.id == exercise.id;
+                  return x.id === exercise.id;
                 }) as StageExercise;
                 const stageExerciseVm: StageExerciseVm = {
                   id: exercise.id,
@@ -96,7 +96,7 @@ router.get('/:injuryId/:stageId', async (req, res) => {
                   desc: exercise.desc,
                   details: exercise.details,
                   bodyParts: exercise.bodyParts,
-                  break: stageExercise.break,
+                  break: stageExercise?.break,
                   sets: stageExercise?.sets,
                   reps: stageExercise?.reps,
                 };
