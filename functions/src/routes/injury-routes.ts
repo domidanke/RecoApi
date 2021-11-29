@@ -1,15 +1,10 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import {
-  Injury,
-  InjuryStage,
-  InjuryVm,
-  StageExercise,
-  StageExerciseVm,
-} from '../models/injury/injury';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {User, UserInjury} from '../models/user/user';
 import {Exercise} from '../models/exercise/exercise';
+import {Injury, InjuryStage, StageExercise} from '../models/injury/injury';
+import {StageExerciseVm, InjuryVm} from '../models/injury/injury-vm';
 
 const router = express.Router();
 

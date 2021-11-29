@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {DocumentSnapshot} from 'firebase-functions/v1/firestore';
 import {v4 as uuid} from 'uuid';
-import {JoinTeamRequest} from '../models/team-request/join-team-request';
+import {JoinTeamRequest} from '../models/shared/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
 import {Team} from '../models/team/team';
 import {registerUserPayloadSchema} from '../models/user/payloads/register-user';

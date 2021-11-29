@@ -1,16 +1,17 @@
 import * as express from 'express';
 import * as admin from 'firebase-admin';
-import {JoinTeamRequest} from '../models/team-request/join-team-request';
+import {JoinTeamRequest} from '../models/shared/join-team-request';
 import validateObjectMw from '../middleware/request-validator';
 import jtrDecisionSchema, {
   JoinTeamRequestDecisionPayload,
-} from '../models/team-request/join-team-request decision';
+} from '../models/team/payloads/join-team-request-decision';
 import validateIsTeamAdmin from '../middleware/is-team-admin-validator';
 import {TeamMember} from '../models/team/team-member';
 import {v4 as uuid} from 'uuid';
-import newTeamRegistrationSchema, {Team} from '../models/team/team';
 import validateIsTeamMember from '../middleware/is-team-member-validator';
 import {User} from '../models/user/user';
+import newTeamRegistrationSchema from '../models/team/payloads/create-team';
+import {Team} from '../models/team/team';
 
 const router = express.Router();
 

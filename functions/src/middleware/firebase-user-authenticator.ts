@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from 'express';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {DecodedToken} from '../models/other/decoded-token';
+import {DecodedToken} from '../models/shared/other/decoded-token';
 
 const validateFirebaseIdToken = async (
   req: Request,
