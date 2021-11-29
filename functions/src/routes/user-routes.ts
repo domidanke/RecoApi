@@ -10,6 +10,44 @@ import {User} from '../models/user/user';
 
 const router = express.Router();
 
+// * Create/Register User
+router.post(
+  '',
+  validateObjectMw(registerUserPayloadSchema),
+  async (req, res) => {
+    const userToRegister: User = req.body;
+    userToRegister.id = req.currentUserId;
+    userToRegister.email = req.currentUserEmail;
+    userToRegister.createdDate = new Date();
+    userToRegister.teamIds = []; // Ensure that property is array and not null
+    await admin
+      .firestore()
+      .collection('users')
+      .doc(userToRegister.id)
+      .set(userToRegister)
+      .then(() => {
+        res.status(201).send('Successfully registered User');
+      });
+  }
+);
+
+// * Get User
+router.get('', async (req, res) => {
+  await admin
+    .firestore()
+    .collection('users')
+    .doc(req.currentUserId)
+    .get()
+    .then((userSnap: DocumentSnapshot) => {
+      if (!userSnap.exists) {
+        res.send(404).send('User does not exist');
+      } else {
+        res.status(200).send(userSnap.data() as User);
+      }
+    });
+});
+
+// * Create Join Team Request
 router.post('/registration-requests/:teamId', async (req, res) => {
   const exists = await joinTeamRequestExists(
     req.currentUserId,
@@ -59,6 +97,7 @@ router.post('/registration-requests/:teamId', async (req, res) => {
   }
 });
 
+// * Get Join Team Requests
 router.get('/registration-requests', async (req, res) => {
   await admin
     .firestore()
@@ -74,41 +113,7 @@ router.get('/registration-requests', async (req, res) => {
     });
 });
 
-router.get('', async (req, res) => {
-  await admin
-    .firestore()
-    .collection('users')
-    .doc(req.currentUserId)
-    .get()
-    .then((userSnap: DocumentSnapshot) => {
-      if (!userSnap.exists) {
-        res.send(404).send('User does not exist');
-      } else {
-        res.status(200).send(userSnap.data() as User);
-      }
-    });
-});
-
-router.post(
-  '',
-  validateObjectMw(registerUserPayloadSchema),
-  async (req, res) => {
-    const userToRegister: User = req.body;
-    userToRegister.id = req.currentUserId;
-    userToRegister.email = req.currentUserEmail;
-    userToRegister.createdDate = new Date();
-    userToRegister.teamIds = []; // Ensure that property is array and not null
-    await admin
-      .firestore()
-      .collection('users')
-      .doc(userToRegister.id)
-      .set(userToRegister)
-      .then(() => {
-        res.status(201).send('Successfully registered User');
-      });
-  }
-);
-
+// * private functions
 async function joinTeamRequestExists(userId: string, teamId: string) {
   return await admin
     .firestore()

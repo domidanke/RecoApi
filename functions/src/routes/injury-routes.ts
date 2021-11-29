@@ -13,6 +13,7 @@ import {Exercise} from '../models/exercise/exercise';
 
 const router = express.Router();
 
+// * Create Injury
 router.post('/:injuryId', async (req, res) => {
   await admin
     .firestore()
@@ -59,6 +60,7 @@ router.post('/:injuryId', async (req, res) => {
     });
 });
 
+// * Get Injury Information
 router.get('/:injuryId/:stageId', async (req, res) => {
   const injSnap = await admin
     .firestore()
@@ -66,7 +68,7 @@ router.get('/:injuryId/:stageId', async (req, res) => {
     .doc(req.params.injuryId)
     .get();
   if (!injSnap.exists) {
-    res.send(404).send('Injury does not exist');
+    res.status(404).send('Injury does not exist');
   } else {
     const injury = injSnap.data() as Injury;
     await injSnap.ref
@@ -75,7 +77,7 @@ router.get('/:injuryId/:stageId', async (req, res) => {
       .get()
       .then(async (stageSnap) => {
         if (!stageSnap.exists) {
-          res.send(404).send('Stage does not exist');
+          res.status(404).send('Stage does not exist');
         } else {
           const stage = stageSnap.data() as InjuryStage;
           const exerciseIds = stage.exercises.map((x) => {
@@ -126,6 +128,7 @@ router.get('/:injuryId/:stageId', async (req, res) => {
   }
 });
 
+// * Advance Injury to next Stage
 router.post('/:injuryId/:stageId/advance', async (req, res) => {
   const injSnap = await admin
     .firestore()
@@ -133,7 +136,7 @@ router.post('/:injuryId/:stageId/advance', async (req, res) => {
     .doc(req.params.injuryId)
     .get();
   if (!injSnap.exists) {
-    res.send(404).send('Injury does not exist');
+    res.status(404).send('Injury does not exist');
   } else {
     await injSnap.ref
       .collection('stages')
@@ -141,23 +144,31 @@ router.post('/:injuryId/:stageId/advance', async (req, res) => {
       .get()
       .then(async (stageSnap) => {
         const stage = stageSnap.data() as InjuryStage;
-        await injSnap.ref
-          .collection('stages')
-          .where('order', '==', stage.order + 1)
-          .limit(1)
-          .get()
-          .then(async (nextStage) => {
-            const newStage = nextStage.docs[0].data() as InjuryStage;
-            await admin
-              .firestore()
-              .collection('users')
-              .doc(req.currentUserId)
-              .update({
-                'currentInjury.injuryStageId': newStage.id,
-                'currentInjury.injuryStage': newStage.desc,
-              });
-            res.send(200).send('Successfully proceeded to next stage');
-          });
+        if (stage.order == -1) {
+          res.status(400).send('You cannot advance in this stage');
+        } else {
+          await injSnap.ref
+            .collection('stages')
+            .where('order', '==', stage.order + 1)
+            .limit(1)
+            .get()
+            .then(async (nextStage) => {
+              if (nextStage.empty) {
+                res.status(400).send('You cannot advance in this stage');
+              } else {
+                const newStage = nextStage.docs[0].data() as InjuryStage;
+                await admin
+                  .firestore()
+                  .collection('users')
+                  .doc(req.currentUserId)
+                  .update({
+                    'currentInjury.injuryStageId': newStage.id,
+                    'currentInjury.injuryStage': newStage.desc,
+                  });
+                res.status(200).send('Successfully proceeded to next stage');
+              }
+            });
+        }
       });
   }
 });
