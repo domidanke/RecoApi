@@ -48,7 +48,7 @@ router.get('', async (req, res) => {
 });
 
 // * Create Join Team Request
-router.post('/registration-requests/:teamId', async (req, res) => {
+router.post('/join-team-requests/:teamId', async (req, res) => {
   const exists = await joinTeamRequestExists(
     req.currentUserId,
     req.params.teamId
@@ -98,7 +98,7 @@ router.post('/registration-requests/:teamId', async (req, res) => {
 });
 
 // * Get Join Team Requests
-router.get('/registration-requests', async (req, res) => {
+router.get('/join-team-requests', async (req, res) => {
   await admin
     .firestore()
     .collection('joinTeamRequests')
