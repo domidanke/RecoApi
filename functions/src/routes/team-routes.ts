@@ -200,7 +200,7 @@ router.post(
 
 // * Remove Team Member
 router.post(
-  '/:teamId/remove-user/:userId',
+  '/:teamId/remove-team-member/:userId',
   validateIsTeamAdmin(),
   async (req, res) => {
     if (await isTeamMember(req.params.userId, req.params.teamId)) {

@@ -36,7 +36,7 @@ router.get('/body-parts', async (req, res) => {
     });
 });
 
-// * Get Body Part Select Options
+// * Get Team Member Type Select Options
 router.get('/team-member-types', async (req, res) => {
   await admin
     .firestore()
