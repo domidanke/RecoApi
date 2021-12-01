@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 import {BodyPart} from '../models/shared/body-part';
 import {Sport} from '../models/shared/sport';
+import {TeamMemberType} from '../models/team/team-member-type';
 
 const router = express.Router();
 
@@ -12,11 +13,11 @@ router.get('/sports', async (req, res) => {
     .collection('sports')
     .get()
     .then((sportSnaps) => {
-      const sportList: Sport[] = [];
+      const sports: Sport[] = [];
       for (const doc of sportSnaps.docs) {
-        sportList.push(doc.data() as Sport);
+        sports.push(doc.data() as Sport);
       }
-      res.status(200).send(sportList);
+      res.status(200).send(sports);
     });
 });
 
@@ -27,10 +28,25 @@ router.get('/body-parts', async (req, res) => {
     .collection('bodyParts')
     .get()
     .then((sportSnaps) => {
-      const bodyPartList: BodyPart[] = [];
+      const bodyParts: BodyPart[] = [];
       for (const doc of sportSnaps.docs) {
-        bodyPartList.push(doc.data() as Sport);
+        bodyParts.push(doc.data() as Sport);
       }
-      res.status(200).send(bodyPartList);
+      res.status(200).send(bodyParts);
+    });
+});
+
+// * Get Body Part Select Options
+router.get('/team-member-type', async (req, res) => {
+  await admin
+    .firestore()
+    .collection('teamMemberTypes')
+    .get()
+    .then((sportSnaps) => {
+      const teamMemberTypes: TeamMemberType[] = [];
+      for (const doc of sportSnaps.docs) {
+        teamMemberTypes.push(doc.data() as TeamMemberType);
+      }
+      res.status(200).send(teamMemberTypes);
     });
 });

@@ -63,11 +63,11 @@ router.get(
       .where('teamId', '==', req.params.teamId)
       .get()
       .then((snaps) => {
-        const jtrList: JoinTeamRequest[] = [];
+        const joinTeamRequests: JoinTeamRequest[] = [];
         for (const doc of snaps.docs) {
-          jtrList.push(doc.data() as JoinTeamRequest);
+          joinTeamRequests.push(doc.data() as JoinTeamRequest);
         }
-        res.status(200).send(jtrList);
+        res.status(200).send(joinTeamRequests);
       });
   }
 );
