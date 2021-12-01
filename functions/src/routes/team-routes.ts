@@ -10,51 +10,47 @@ import {TeamMember} from '../models/team/team-member';
 import {v4 as uuid} from 'uuid';
 import validateIsTeamMember from '../middleware/is-team-member-validator';
 import {User} from '../models/user/user';
-import newTeamRegistrationSchema from '../models/team/payloads/create-team';
+import createTeamPayloadSchema from '../models/team/payloads/create-team';
 import {Team} from '../models/team/team';
 
 const router = express.Router();
 
 // * Create/Register Team
-router.post(
-  '',
-  validateObjectMw(newTeamRegistrationSchema),
-  async (req, res) => {
-    const team: Team = req.body;
-    team.id = uuid();
-    team.creatorId = req.currentUserId;
-    team.createdDate = new Date();
-    team.admins = [req.currentUserId];
-    await admin
-      .firestore()
-      .collection('teams')
-      .doc(team.id)
-      .set(team)
-      .then(async () => {
-        const firstMember: TeamMember = {
-          id: req.currentUserId,
-          dateJoined: team.createdDate,
-          teamMemberTypeCode: 'COA',
-          active: true,
-          nickName: '',
-        };
-        await admin
-          .firestore()
-          .collection('teams')
-          .doc(team.id)
-          .collection('teamMembers')
-          .doc(firstMember.id)
-          .set(firstMember)
-          .then(() => {
-            res.status(201).send('Successfully created new Team');
-          });
-      });
-  }
-);
+router.post('', validateObjectMw(createTeamPayloadSchema), async (req, res) => {
+  const team: Team = req.body;
+  team.id = uuid();
+  team.creatorId = req.currentUserId;
+  team.createdDate = new Date();
+  team.admins = [req.currentUserId];
+  await admin
+    .firestore()
+    .collection('teams')
+    .doc(team.id)
+    .set(team)
+    .then(async () => {
+      const firstMember: TeamMember = {
+        id: req.currentUserId,
+        dateJoined: team.createdDate,
+        teamMemberTypeCode: 'COA',
+        active: true,
+        nickName: '',
+      };
+      await admin
+        .firestore()
+        .collection('teams')
+        .doc(team.id)
+        .collection('teamMembers')
+        .doc(firstMember.id)
+        .set(firstMember)
+        .then(() => {
+          res.status(201).send('Successfully created new Team');
+        });
+    });
+});
 
 // * Get Join Team Requests
 router.get(
-  '/:teamId/registration-requests',
+  '/:teamId/join-team-requests',
   validateIsTeamAdmin(),
   async (req, res) => {
     await admin
@@ -74,7 +70,7 @@ router.get(
 
 // * Decision Join Team Request
 router.post(
-  '/:teamId/registration-requests',
+  '/:teamId/join-team-request',
   validateObjectMw(jtrDecisionSchema),
   validateIsTeamAdmin(),
   async (req, res) => {

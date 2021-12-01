@@ -5,9 +5,9 @@ export interface CreateTeamPayload {
   sportCode: string;
 }
 
-const newTeamRegistrationSchema: SchemaOf<CreateTeamPayload> = object({
+const createTeamPayloadSchema: SchemaOf<CreateTeamPayload> = object({
   name: string().required('Team Name is missing'),
   sportCode: string().required('Sport Code is missing'),
 });
 
-export default newTeamRegistrationSchema;
+export default createTeamPayloadSchema;
