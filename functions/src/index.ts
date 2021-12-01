@@ -1,6 +1,7 @@
 const teamRoutes = require('./routes/team-routes');
 const injuryRoutes = require('./routes/injury-routes');
 const userRoutes = require('./routes/user-routes');
+const dataRoutes = require('./routes/data-routes');
 import * as functions from 'firebase-functions';
 import * as express from 'express';
 const firestore = require('@google-cloud/firestore');
@@ -17,6 +18,7 @@ app.use(validateFirebaseIdToken);
 app.use('/team', teamRoutes);
 app.use('/injury', injuryRoutes);
 app.use('/user', userRoutes);
+app.use('/data', dataRoutes);
 app.use(errorHandler); // ! This needs to be here so the middleware is the last one to be called.
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
